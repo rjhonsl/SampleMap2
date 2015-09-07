@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -65,6 +66,8 @@ public class Helper {
         public static String URL_INSERT_PONDINFO        = "http://mysanteh.site50.net/santehweb/insertPondInformation.php";
 
         public static String URL_UPDATE_PONDINFO_BY_ID  ="http://mysanteh.site50.net/santehweb/updatePondInformationByID.php";
+
+        public static String URL_LOGIN  ="http://mysanteh.site50.net/santehweb/login.php";
 
         public static String[] ARRAY_SPECIES = {
 //                "Bangus",   //0
@@ -339,8 +342,9 @@ public class Helper {
         text.setText(msg);
 
         Toast toast = new Toast(context.getApplicationContext());
-        toast.setGravity(Gravity.BOTTOM, 0, 100);
+        toast.setGravity(Gravity.BOTTOM|Gravity.FILL_HORIZONTAL, 0, 0);
         toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setMargin(0, 0);
         toast.setView(layout);
         toast.show();
     }
@@ -357,7 +361,8 @@ public class Helper {
         text.setText(msg);
 
         Toast toast = new Toast(context.getApplicationContext());
-        toast.setGravity(Gravity.BOTTOM, 0, 100);
+        toast.setGravity(Gravity.BOTTOM|Gravity.FILL_HORIZONTAL, 0, 0);
+        toast.setMargin(0, 0);
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(layout);
         toast.show();
@@ -526,5 +531,15 @@ public class Helper {
         TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
         return telephonyManager.getDeviceId();
     }
+
+    public static Dialog initProgressDialog(Activity activity){
+        Dialog PD = new Dialog(activity);
+        PD.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        PD.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+//        PD.setCancelable(false);
+        PD.setContentView(R.layout.progressdialog);
+        return  PD;
+    }
+
 
 }
