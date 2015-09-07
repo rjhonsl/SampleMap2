@@ -1,6 +1,7 @@
 package com.santeh.rjhonsl.samplemap.Main;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -19,10 +20,10 @@ import com.santeh.rjhonsl.samplemap.Utils.Helper;
 public class Activity_LoginScreen extends Activity{
 
     EditText txtusername, txtpassword;
-    TextView txtappname1, txtappname2, txtshowpassword, txtforgot, txtrequestaccount;
+    TextView txtappname1, txtappname2, txtshowpassword, txtforgot, txtrequestaccount, txttester;
 
     CheckBox chkshowpasword;
-    Activity activity;
+    Activity activity; Context context;
 
 
     @Override
@@ -30,8 +31,11 @@ public class Activity_LoginScreen extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginscreen);
         activity = this;
+        context = Activity_LoginScreen.this;
+
 
         Helper.hidekeyboardOnLoad(activity);
+
 
         txtusername = (EditText) findViewById(R.id.txt_loginscreen_username);
         txtpassword = (EditText) findViewById(R.id.txt_loginscreen_password);
@@ -40,6 +44,8 @@ public class Activity_LoginScreen extends Activity{
         txtshowpassword = (TextView) findViewById(R.id.txt_loginscreen_showpassword);
         txtforgot = (TextView) findViewById(R.id.txtforgot_password);
         txtrequestaccount = (TextView) findViewById(R.id.txt_requestaccount);
+
+        txttester = (TextView) findViewById(R.id.txttester);
 
 
         chkshowpasword = (CheckBox) findViewById(R.id.chk_loginscreen_showpassword);
@@ -53,6 +59,12 @@ public class Activity_LoginScreen extends Activity{
         txtappname2.setTypeface(font_roboto);
         txtpassword.setTypeface(font_roboto);
         txtusername.setTypeface(font_roboto);
+
+        txttester.setText(
+                Helper.getIMEI(context)
+                        + " " +
+                Helper.getMacAddress(context)
+        );
 
         txtshowpassword.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -165,14 +165,25 @@
 
         </RelativeLayout>
 
+        <TextView android:layout_width="fill_parent" android:layout_height="wrap_content"
+            android:text="sample"
+                  android:id="@+id/txttester"
+                  android:gravity="center"
+                  android:textSize="12sp"
+                  android:textColor="#FFFFFF"
+            />
+
         <LinearLayout android:layout_width="fill_parent"
+                      android:id="@+id/bottomContainer"
                       android:layout_height="wrap_content"
+                      android:gravity="center"
             android:orientation="horizontal">
 
             <TextView android:layout_width="wrap_content"
                       android:background="@drawable/bg_material_transparent"
                       android:id="@+id/txtforgot_password"
                       android:textColor="#ffffff"
+                      android:textSize="12sp"
                       android:gravity="center"
                       android:layout_weight="1"
                       android:padding="10dp"
@@ -180,10 +191,8 @@
                              android:text="Forgot your password?"
             />
 
-            <View android:layout_width="2dp" android:layout_height="fill_parent"
+            <View android:layout_width="1dp" android:layout_height="16dp"
                   android:background="#FFFFFF"
-                  android:layout_marginBottom="4dp"
-                  android:layout_marginTop="4dp"
                 />
 
             <TextView android:layout_width="wrap_content"
@@ -191,7 +200,7 @@
                       android:padding="10dp"
                       android:layout_weight="1"
                       android:gravity="center"
-
+                      android:textSize="12sp"
                       android:id="@+id/txt_requestaccount"
                       android:textColor="#ffffff"
                       android:layout_height="wrap_content"
