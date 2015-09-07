@@ -1,0 +1,517 @@
+package com.santeh.rjhonsl.samplemap.Utils;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.santeh.rjhonsl.samplemap.R;
+
+import org.joda.time.DateTime;
+import org.joda.time.Weeks;
+
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.crypto.Cipher;
+
+/**
+ * Created by rjhonsl on 7/24/2015.
+ */
+public class Helper {
+
+    public static class variables{
+        public static String URL_SELECT_ALL_CUSTINFO    = "http://mysanteh.site50.net/santehweb/selectAllCustomerInfo.php";
+        public static String URL_SELECT_ALL_CUSTINFO_LEFTJOIN_PONDINFO    = "http://mysanteh.site50.net/santehweb/selectCustinfoLeftJoinPondinf.php";
+        public static String URL_SELECT_CUSTINFO_BY_ID  = "http://mysanteh.site50.net/santehweb/selectByID.php";
+        public static String URL_SELECT_PONDINFO_BY_CUSTOMER_ID ="http://mysanteh.site50.net/santehweb/selectPondByCustomerID.php";
+        public static String URL_SELECT_ALL_PONDINFO_GROUPBY_CUSTINFO = "http://mysanteh.site50.net/santehweb/selectAllPondGroupBy.php";
+        public static String URL_SELECT_ALL_PONDINFO = "http://mysanteh.site50.net/santehweb/selectAllPond.php";
+        public static String URL_SELECT_ALL_PONDINFO_BETWEEN_DATES = "http://mysanteh.site50.net/santehweb/selectAllPondBetweenDate.php";
+        public static String URL_SELECT_ALL_PONDINFO_LEFTJOIN_CUSTINFO = "http://mysanteh.site50.net/santehweb/selectAllPondInfoLeftJoinCustInfo.php";
+
+        public static String URL_DELETE_CUSTINFO_BY_ID  = "http://mysanteh.site50.net/santehweb/deleteByID.php";
+        public static String URL_DELETE_POND_BY_ID      = "http://mysanteh.site50.net/santehweb/deletePondInfoByID.php";
+
+        public static String URL_INSERT_PONDINFO        = "http://mysanteh.site50.net/santehweb/insertPondInformation.php";
+
+        public static String URL_UPDATE_PONDINFO_BY_ID  ="http://mysanteh.site50.net/santehweb/updatePondInformationByID.php";
+
+        public static String[] ARRAY_SPECIES = {
+//                "Bangus",   //0
+//                "Catfish",  //1
+//                "Crab",     //2
+//                "Grouper",  //3
+//                "Pangasius",//5
+//                "Pompano",  //6
+//                "Prawns",   //7
+//                "Rabbit Fish",//8
+//                "Seabass",  //9
+//                "Snapper",  //10
+                "Tilapia"  //12
+//                "Vanamei"   //11
+        };
+
+
+        public static String[] ARRAY_CULTURE_LEVEL = {
+                "Extensive",
+                "Intensive",
+                "Semi-Intesive",
+                "Mono-Culture",
+                "Poly-Culture"
+        };
+
+
+        public static String[] ARRAY_CULTURE_SYSTEM = {
+                "Cage",
+                "Pen",
+                "Pond"
+        };
+
+
+        public static double[] ARRAY_FEEDING_RATE_PER_WEEK={
+                0,       //week 1
+                0.1,     //week 2
+                0.09,    //week 3
+                0.09,    //week 4
+                0.07,    //week 5
+                0.06,    //week 6
+                0.053,   //week 7
+                0.048,   //week 8
+                0.040,   //week 9
+                0.038,   //week 10
+                0.035,   //week 11
+                0.032,   //week 12
+                0.030,   //week 13
+                0.030,   //weel 14
+                0.028,   //week 15
+                0.028,   //week 16
+                0.025,   //week 17
+                0.025,   //week 18
+        };
+
+
+        public static double[] ARRAY_ABW_WEEKLY={
+                0,       //week 1
+                7.5,     //week 2
+                10.0,    //week 3
+                12.5,    //week 4
+                20.0,    //week 5
+                25.0,    //week 6
+                32.5,    //week 7
+                42.5,    //week 8
+                60.00,   //week 9
+                67.50,   //week 10
+                82.50,   //week 11
+                95.00,   //week 12
+                102.5,   //week 13
+                135.0,   //weel 14
+                155.0,   //week 15
+                175.0,   //week 16
+                197.5,   //week 17
+                200.0,   //week 18
+        };
+
+
+
+
+
+        public static class tables{
+
+            public static class PONDINFO{
+                public static String id = "id";
+                public static String pondID = "pondid";
+                public static String specie = "specie";
+                public static String dateOfStocking = "dateStocked";
+                public static String quantity = "quantity";
+                public static String areaOfPond = "area";
+                public static String cultureSysten = "culturesystem";
+                public static String remarks = "culturesystem";
+                public static String customerID = "customerID";
+            }
+        }
+    }
+
+
+
+    public class cipher{
+
+        private  KeyPair javkey;
+
+        public void main (String args) throws Exception {
+            //
+            // check args and get plaintext
+            if (args.length() !=1) {
+                System.err.println("Usage: java PublicExample text");
+                System.exit(1);
+            }
+            byte[] plainText = args.getBytes("UTF8");
+
+            // generate an RSA key
+            Log.d("Cipher", "Start generating RSA key");
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+            keyGen.initialize(128);
+            KeyPair key = keyGen.generateKeyPair();
+            Log.d("Cipher", key.toString());
+            javkey = key;
+
+            System.out.println("Finish generating RSA key");
+            //
+            // get an RSA cipher object and print the provider
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            System.out.println( "\n" + cipher.getProvider().getInfo() );
+            //
+            // encrypt the plaintext using the public key
+            System.out.println( "\nStart encryption" );
+            cipher.init(Cipher.ENCRYPT_MODE, key.getPublic());
+            byte[] cipherText = cipher.doFinal(plainText);
+            System.out.println( "Finish encryption: " );
+            System.out.println( new String(cipherText, "UTF8") );
+            //
+            // decrypt the ciphertext using the private key
+            System.out.println( "\nStart decryption" );
+            cipher.init(Cipher.DECRYPT_MODE, key.getPrivate());
+            byte[] newPlainText = cipher.doFinal(cipherText);
+            System.out.println( "Finish decryption: " );
+            System.out.println( new String(newPlainText, "UTF8") );
+        }
+    }
+
+    public static double get_ABW_BY_WEEK_NO(int weekNo) {
+        return variables.ARRAY_ABW_WEEKLY[(weekNo-1)];
+    }
+
+    public static String computeWeeklyFeedConsumption(double ABW, double NumberofStock, double feedingrate, double survivalrate) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        return df.format (ABW*NumberofStock*feedingrate*survivalrate*7);
+    }
+
+
+    public static double get_FeedingRate_by_WeekNum(int weeknum){
+        if (weeknum > 18){
+            return Helper.variables.ARRAY_FEEDING_RATE_PER_WEEK[17];
+        }else{
+            return Helper.variables.ARRAY_FEEDING_RATE_PER_WEEK[weeknum-1];
+        }
+
+    }
+
+    public static int get_currentWeek_by_stockedDate(String stockedDate, int abw){
+
+        DateTime dt = new DateTime();
+        GregorianCalendar jdkGcal = dt.toGregorianCalendar();
+        dt = new DateTime(jdkGcal);
+
+
+        String[] datesplitter = stockedDate.split("/");
+        int weekStocked = Helper.get_StartWeekOf_Tilapia_ByABW(abw);
+        long currendate = System.currentTimeMillis();
+        long stockeddate = Helper.convertDateToLong(Integer.parseInt(datesplitter[1]), Integer.parseInt(datesplitter[0]), Integer.parseInt(datesplitter[2]));
+
+        Log.d("Week Summary", stockeddate + " " + currendate + " " + weekStocked);
+        DateTime start = new DateTime(
+                Integer.parseInt(datesplitter[2]), //year
+                Integer.parseInt(datesplitter[0]), //month
+                Integer.parseInt(datesplitter[1]), //day
+                0, 0, 0, 0);
+
+        datesplitter = Helper.convertLongtoDateString(currendate).split("/");
+        DateTime end = new DateTime(
+                Integer.parseInt(datesplitter[2]), //year
+                Integer.parseInt(datesplitter[1]), //month
+                Integer.parseInt(datesplitter[0]), //day
+                0, 0, 0, 0);
+
+
+        Weeks weeks = Weeks.weeksBetween(start, end);
+
+        int currentWeekOfStock = weekStocked + weeks.getWeeks();
+
+        return currentWeekOfStock;
+    }
+
+
+
+    public static int get_StartWeekOf_Tilapia_ByABW(int abw){
+
+
+        if (abw >= variables.ARRAY_ABW_WEEKLY[17]){
+            return 18;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[16]){
+            return 17;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[15]){
+            return 16;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[14]){
+            return 15;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[13]){
+            return 14;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[12]){
+            return 13;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[11]){
+            return 12;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[10]){
+            return 11;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[9]){
+            return 10;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[8]){
+            return 9;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[7]){
+            return 8;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[6]){
+            return 7;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[5]){
+            return 6;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[4]){
+            return 5;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[3]){
+            return 4;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[2]){
+            return 3;
+        }else if (abw >= variables.ARRAY_ABW_WEEKLY[1]){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
+
+
+
+    public static String getFeedTypeByNumberOfWeeks(int week){
+        String feedtype;
+
+        if (week <= 6) {
+            feedtype = "Frymash";
+        } else if(week <= 8){
+            feedtype = "Crumble";
+        } else if(week <= 10){
+            feedtype = "Starter";
+        } else if(week <= 14){
+            feedtype = "Grower";
+        } else {
+            feedtype = "Finisher";
+        }
+
+        return feedtype;
+    }
+
+
+
+    public static void toastShort(Activity context, String msg){
+
+//        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+
+        LayoutInflater inflater = context.getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast,
+                (ViewGroup) context.findViewById(R.id.toast_layout_root));
+
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        Typeface font = Typeface.createFromAsset(context.getAssets(), "Roboto-Light.ttf");
+        text.setTypeface(font);
+        text.setText(msg);
+
+        Toast toast = new Toast(context.getApplicationContext());
+        toast.setGravity(Gravity.BOTTOM, 0, 100);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+    }
+
+    public static void toastLong(Activity context, String msg){
+
+        LayoutInflater inflater = context.getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast,
+                (ViewGroup) context.findViewById(R.id.toast_layout_root));
+
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        Typeface font = Typeface.createFromAsset(context.getAssets(), "Roboto-Light.ttf");
+        text.setTypeface(font);
+        text.setText(msg);
+
+        Toast toast = new Toast(context.getApplicationContext());
+        toast.setGravity(Gravity.BOTTOM, 0, 100);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
+    }
+
+    public static Marker map_addMarker(GoogleMap map, LatLng latlng, int iconResID,
+                                       final String farmname, final String address, String id, String totalstock, String specie){
+
+
+        Marker marker = map.addMarker(new MarkerOptions()
+
+                .title(id + "-" + farmname + "-" + totalstock + "-" + specie)
+                .icon(BitmapDescriptorFactory.fromResource(iconResID))
+                .snippet(address)
+                .position(latlng).draggable(true));
+        return marker;
+    }
+
+
+
+    public static Dialog createCustomDialoYesNO(Activity activity, int dialogResID, String prompt, String title, String strButton1, String strButton2){
+        final Dialog d = new Dialog(activity);//
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        d.setContentView(dialogResID);//Set the xml view of the dialog
+        Button btn1 = (Button) d.findViewById(R.id.btn_dialog_yesno_opt1);
+        Button btn2 = (Button) d.findViewById(R.id.btn_dialog_yesno_opt2);
+        TextView txttitle = (TextView) d.findViewById(R.id.dialog_yesno_title);
+        TextView txtprompt = (TextView) d.findViewById(R.id.dialog_yesno_prompt);
+
+        txtprompt.setText(prompt);
+        txttitle.setText(title);
+        btn1.setText(strButton1);
+        btn2.setText(strButton2);
+        return d;
+    }
+
+    public static Dialog createCustomDialog(Activity activity, int dialogResID){
+        final Dialog d = new Dialog(activity);//
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE); //notitle
+        d.setContentView(dialogResID);//Set the xml view of the dialog
+        return d;
+    }
+
+    public static Dialog createCustomDatePicker(Activity activity){
+        final Dialog d = new Dialog(activity);//
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE); //notitle
+        d.setContentView(R.layout.dialog_calendarpicker_dateview);//Set the xml view of the dialog
+        return d;
+    }
+
+
+
+    public static Dialog createCustomDialogOKOnly(Activity activity, String title, String prompt, String button){
+        final Dialog d = new Dialog(activity);//
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE); //notitle
+        d.setContentView(R.layout.dialog_material_okonly);//Set the xml view of the dialog
+        TextView txttitle = (TextView) d.findViewById(R.id.dialog_okonly_title);
+        TextView txtprompt = (TextView) d.findViewById(R.id.dialog_okonly_prompt);
+        TextView txtok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
+        txtprompt.setText(prompt);
+        txttitle.setText(title);
+        txtok.setText(button);
+        d.show();
+
+        return d;
+    }
+
+    public static Dialog createCustomListDialog(Activity activity, String[] options, String title){
+        final Dialog d = new Dialog(activity);//
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE); //notitle
+        d.setContentView(R.layout.dialog_material_list);//Set the xml view of the dialog
+
+        ListView listview = (ListView) d.findViewById(R.id.dialog_list_listview);
+        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(activity, R.layout.select_dialog_item_material, options); //selected item will look like a spinner set from XML
+        listViewAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        listview.setAdapter(listViewAdapter);
+
+        TextView txtTitle = (TextView) d.findViewById(R.id.dialog_okonly_title);
+        txtTitle.setText(title);
+        d.show();
+        return d;
+    }
+
+    public static long convertDateToLong(int dd, int MM, int yyyy){
+        long startDate=000000;
+        try {
+            String dateString = dd+"/"+MM+"/"+yyyy;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+            startDate = date.getTime();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return startDate;
+    }
+
+    public static String convertLongtoDateString(long dateInMillis){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
+        return formatter.format(calendar.getTime());
+    }
+
+    public static int[] convertLongtoDateFormat(long dateinMilis) {
+//        Calendar calendar = null;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String dateString = formatter.format(new Date(dateinMilis));
+        String[] date = dateString.split("/");
+
+//        calendar.setTimeInMillis(dateinMilis);
+        int day = Integer.parseInt(date[0]);
+        int month = Integer.parseInt(date[1]);
+        int year = Integer.parseInt(date[2]);
+
+
+        return new int[]{month,day,year};
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static void hidekeyboardOnLoad(Activity activity){
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+
+
+    public static void moveCursortoEnd(Activity activity, int resId){
+        EditText et = (EditText)activity.findViewById(resId);
+        et.setSelection(et.getText().length());
+    }
+
+    public static String extractResponseCode(String response){
+
+        int coloncounter = 0;
+        String responseCode="";
+        for (int i = 0; i < response.length(); i++) {
+            char c = response.charAt(i);
+            if (coloncounter>0){
+                responseCode = responseCode + String.valueOf(c);
+                break;
+            }
+            if (c ==':'){
+                coloncounter=coloncounter+1;
+            }
+        }
+
+        return responseCode;
+    }
+
+
+}
