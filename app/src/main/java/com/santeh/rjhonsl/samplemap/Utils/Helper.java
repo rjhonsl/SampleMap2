@@ -3,8 +3,10 @@ package com.santeh.rjhonsl.samplemap.Utils;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -541,5 +543,39 @@ public class Helper {
         return  PD;
     }
 
+    public static void isLocationAvailable(final Context context, Activity activity){
+        LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {}
+
+        if(!gps_enabled) {
+            final Dialog d = createCustomDialoYesNO(activity, R.layout.dialog_material_yesno,"Location services is needed to use this application. Please turn on Location in settings","GPS Service","OK","No");
+            Button b1 = (Button) d.findViewById(R.id.btn_dialog_yesno_opt1);
+            Button b2 = (Button) d.findViewById(R.id.btn_dialog_yesno_opt2);
+
+            b2.setVisibility(View.GONE);
+            d.setCancelable(false);
+            d.show();
+
+            b1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    d.hide();
+                    Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    context.startActivity(gpsOptionsIntent);
+
+                }
+            });
+
+        }
+    }
 
 }

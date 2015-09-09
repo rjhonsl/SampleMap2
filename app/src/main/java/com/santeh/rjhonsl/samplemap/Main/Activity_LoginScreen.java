@@ -3,6 +3,7 @@ package com.santeh.rjhonsl.samplemap.Main;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -58,7 +59,14 @@ public class Activity_LoginScreen extends Activity{
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+                if (txtusername.getText().toString().equalsIgnoreCase("") || txtusername.getText().toString().trim().equalsIgnoreCase("")){
+                    Helper.toastShort(activity,"Username is needed");
+                }else if(txtpassword.getText().toString().equalsIgnoreCase("") || txtpassword.getText().toString().trim().equalsIgnoreCase("")){
+                    Helper.toastShort(activity,"Password is needed");
+                }else{
+                    login();
+                }
+
             }
         });
         Helper.hidekeyboardOnLoad(activity);
@@ -156,10 +164,12 @@ public class Activity_LoginScreen extends Activity{
                         public void onResponse(String response) {
                             PD.dismiss();
                             if (response.substring(1,2).equalsIgnoreCase("0")){
-                                Helper.toastShort(activity,"Invalid Login credentials");
+                                Helper.toastShort(activity,"Username and password does not seem to match");
                             }
                             else {
                                 Helper.toastShort(activity,"Success");
+                                Intent intent = new Intent(Activity_LoginScreen.this, MapsActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             }
 
                         }
@@ -189,5 +199,10 @@ public class Activity_LoginScreen extends Activity{
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+       Helper.isLocationAvailable(context, activity);
+    }
 }//end of class
