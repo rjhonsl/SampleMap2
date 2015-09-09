@@ -18,11 +18,16 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.maps.model.LatLng;
 import com.santeh.rjhonsl.samplemap.APIs.MyVolleyAPI;
+import com.santeh.rjhonsl.samplemap.Obj.CustInfoObject;
+import com.santeh.rjhonsl.samplemap.Parsers.AccountsParser;
 import com.santeh.rjhonsl.samplemap.R;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,9 +41,13 @@ public class Activity_LoginScreen extends Activity{
     CheckBox chkshowpasword;
     ImageButton btnLogin;
 
+    LatLng curlatlng;
+    String longitude = " ", latitude=" ";
 
     Activity activity; Context context;
     Dialog PD;
+
+    List<CustInfoObject> listaccounts = new ArrayList<>();
 
 
 
@@ -151,6 +160,8 @@ public class Activity_LoginScreen extends Activity{
 
     public void login() {
 
+        Helper.isLocationAvailable(context, activity);
+
         if(!Helper.isNetworkAvailable(activity)) {
             Helper.toastShort(activity, "Internet Connection is not available. Please try again later.");
         }
@@ -161,16 +172,41 @@ public class Activity_LoginScreen extends Activity{
             StringRequest postRequest = new StringRequest(Request.Method.POST, Helper.variables.URL_LOGIN,
                     new Response.Listener<String>() {
                         @Override
-                        public void onResponse(String response) {
-                            PD.dismiss();
-                            if (response.substring(1,2).equalsIgnoreCase("0")){
-                                Helper.toastShort(activity,"Username and password does not seem to match");
-                            }
-                            else {
-                                Helper.toastShort(activity,"Success");
-                                Intent intent = new Intent(Activity_LoginScreen.this, MapsActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            }
+                        public void onResponse(final String response) {
+
+                            String accountDetail="";
+                                        PD.dismiss();
+                                        if (response.substring(1, 2).equalsIgnoreCase("0")) {
+                                            Helper.toastShort(activity, "Username and password does not seem to match");
+                                        } else {
+                                          listaccounts = AccountsParser.parseFeed(response);
+                                            if (listaccounts.size() > 0){
+                                                accountDetail = ""+
+                                                listaccounts.get(0).getUserid()+" "+
+                                                listaccounts.get(0).getUserlevel()+" " +
+                                                listaccounts.get(0).getUsername() + " " +
+                                                listaccounts.get(0).getFirstname() + " " +
+                                                listaccounts.get(0).getAccountlevelDescription() + " " +
+                                                listaccounts.get(0).getLastname();
+                                            }
+
+//                                            Helper.toastShort(activity, "Success: "+accountDetail);
+                                            Intent intent = new Intent(Activity_LoginScreen.this, MapsActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                            Helper.variables.setGlobalVar_currentlevel(listaccounts.get(0).getUserlevel(), activity);
+
+                                            intent.putExtra("userid", listaccounts.get(0).getUserid());
+                                            intent.putExtra("userlevel", listaccounts.get(0).getUserlevel());
+                                            intent.putExtra("username", listaccounts.get(0).getUsername());
+                                            intent.putExtra("firstname", listaccounts.get(0).getFirstname());
+                                            intent.putExtra("lastname", listaccounts.get(0).getLastname());
+                                            intent.putExtra("userdescription", listaccounts.get(0).getAccountlevelDescription());
+                                            intent.putExtra("fromActivity", "login");
+
+
+                                            startActivity(intent);
+                                        }
 
                         }
                     }, new Response.ErrorListener() {
@@ -186,6 +222,7 @@ public class Activity_LoginScreen extends Activity{
                     params.put("deviceid", Helper.getMacAddress(activity));
                     params.put("username", txtusername.getText().toString());
                     params.put("password", txtpassword.getText().toString());
+//
                     return params;
                 }
             };
@@ -202,7 +239,6 @@ public class Activity_LoginScreen extends Activity{
     @Override
     protected void onResume() {
         super.onResume();
-
        Helper.isLocationAvailable(context, activity);
     }
 }//end of class

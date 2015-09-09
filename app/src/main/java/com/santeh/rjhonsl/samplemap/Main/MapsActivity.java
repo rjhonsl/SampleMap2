@@ -41,6 +41,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.santeh.rjhonsl.samplemap.APIs.MyVolleyAPI;
 import com.santeh.rjhonsl.samplemap.Obj.CustInfoObject;
 import com.santeh.rjhonsl.samplemap.Obj.Var;
 import com.santeh.rjhonsl.samplemap.Parsers.CustAndPondParser;
@@ -48,7 +49,9 @@ import com.santeh.rjhonsl.samplemap.R;
 import com.santeh.rjhonsl.samplemap.Utils.GPSTracker;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -58,6 +61,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private LocationSource.OnLocationChangedListener mListener;
     Location mLastLocation;
+
+    String username, firstname, lastname, userdescription;
+    int userlevel, userid;
 
     DrawerLayout drawerLayout;
 
@@ -85,7 +91,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<CustInfoObject> custInfoObjectList;
     List<CustInfoObject> searchedIDlist = null;
 
-
+    Bundle extrass;
 
 
     @Override
@@ -99,6 +105,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        extrass = getIntent().getExtras();
 
         //Connect app to google maps api
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -140,14 +147,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    private void setupMapifNeeded() {
-        if(googleMap==null){
-            googleMap = ((SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-            if(googleMap != null){
-                setUpMap();
-            }
-        }
-    }
 
     private void setUpMap(){
         googleMap.setMyLocationEnabled(true);
@@ -202,10 +201,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         PD.dismiss();
                         }
                         else{
-                            Helper.toastShort(context, "maps is null");
+                            Helper.toastShort(context, "Can't find current location. Please try again later.");
                         }
 
                     }
+                    
+                }else{
+                    showAllMarker();
                 }
 
             }
@@ -215,7 +217,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
         else{
-            PD.dismiss();
             showAllMarker();
         }
     }
@@ -554,6 +555,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         curlat = bestLocation.getLatitude();
         curLong = bestLocation.getLongitude();
 
+
+
         return new LatLng(bestLocation.getLatitude(), bestLocation.getLongitude());
 //        return userLocation;
     }
@@ -587,14 +590,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onResponse(String response) {
 
-                        PD.dismiss();
                         if (response.substring(1,2).equalsIgnoreCase("0")){
+                            PD.dismiss();
                             Helper.toastShort(context, "Something Happened. Please try again later");
                         }
                         else{
-
+                            PD.dismiss();
                             custInfoObjectList = CustAndPondParser.parseFeed(response);
                             Log.d("JSON PARSE", "BEFORE UPDATE RESOPONSE");
+                            if (Helper.isBundledKeywordNotNull("login", extrass)){
+                                userid = extrass.getInt("userid");
+                                userlevel = extrass.getInt("userlevel");
+                                username = extrass.getString("username");
+                                firstname = extrass.getString("firstname");
+                                lastname = extrass.getString("lastname");
+                                userdescription = extrass.getString("userdescription");
+
+                            }
+                            insertloginlocation();
+
                             updateDisplay();
                         }
 
@@ -611,6 +625,67 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(request);
     }
+
+    private void insertloginlocation(){
+        PD.show();
+        PD.setMessage("Getting location data...");
+
+
+        if (Helper.isBundledKeywordNotNull("fromActivity", extrass)){
+          if (extrass.getString("fromActivity").equalsIgnoreCase("login")) {
+              Log.d("EXTRAS", "fromactivity = login");
+
+              userid = extrass.getInt("userid");
+              userlevel = extrass.getInt("userlevel");
+              username = extrass.getString("username");
+              firstname = extrass.getString("firstname");
+              lastname = extrass.getString("lastname");
+              userdescription = extrass.getString("userdescription");
+
+              StringRequest request = new StringRequest(Helper.variables.URL_INSERT_LOGINLOCATION,
+                      new Response.Listener<String>() {
+                          @Override
+                          public void onResponse(String response) {
+
+                              if (response.substring(1, 2).equalsIgnoreCase("0")) {
+                                  PD.dismiss();
+                                  Helper.toastShort(context, "Something Happened. Please try again later" + response);
+                              } else {
+                                  PD.dismiss();
+                                  Helper.toastShort(context, "Location found :) " + " " + userid + " " + curlat + " " + curLong + " "  + response);
+                              }
+
+                          }
+                      },
+                      new Response.ErrorListener() {
+                          @Override
+                          public void onErrorResponse(VolleyError error) {
+                              PD.dismiss();
+                              Helper.toastShort(MapsActivity.this, "Something happened. Please try again later");
+                          }
+                      }) {
+                  @Override
+                  protected Map<String, String> getParams() {
+                      Map<String, String> params = new HashMap<String, String>();
+                      params.put("userid", userid + "");
+                      params.put("latitude", curlat + "");
+                      params.put("longitude", curLong + "");
+//
+                      return params;
+                  }
+              };
+
+              // Adding request to request queue
+              MyVolleyAPI api = new MyVolleyAPI();
+              api.addToReqQueue(request, MapsActivity.this);
+
+
+          }
+
+        }
+
+    }
+
 
 
     protected void updateDisplay() {

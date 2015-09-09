@@ -22,6 +22,18 @@ public class CustInfoObject {
 	private String dateAddedToDB;
 	private Bitmap bitmap;
 
+
+	private String username;
+	private String firstname;
+	private String lastname;
+
+	private String accountlevelDescription;
+	private int userlevel;
+	private int userid;
+
+
+
+
 	private int pondID;
 	private int area;
 	private int quantity;
@@ -33,9 +45,7 @@ public class CustInfoObject {
 
 
 	private int currentweekofStock;
-
 	private int startweekofStock;
-
 	private int week;
 
 
@@ -53,6 +63,56 @@ public class CustInfoObject {
 
 	private double weeklyConsumptionInGrams;
 
+
+	public int getUserlevel() {
+		return userlevel;
+	}
+
+	public void setUserlevel(int userlevel) {
+		this.userlevel = userlevel;
+	}
+
+	public int getUserid() {
+		return userid;
+	}
+
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
+
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getAccountlevelDescription() {
+		return accountlevelDescription;
+	}
+
+	public void setAccountlevelDescription(String accountlevelDescription) {
+		this.accountlevelDescription = accountlevelDescription;
+	}
 
 
 	public double getWeeklyConsumptionInGrams() {

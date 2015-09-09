@@ -5,6 +5,8 @@
     <string name="closeDrawer">Navigation Drawer Closed</string>
     <string name="NA">N/A</string>
 
+    <string name="error002">Cannot get device location</string>
+
     <string-array name="nav_items">
         <item>Home</item>
         <item>Stockings</item>

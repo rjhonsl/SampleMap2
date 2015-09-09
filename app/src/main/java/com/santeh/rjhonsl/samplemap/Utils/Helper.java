@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,6 +33,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.santeh.rjhonsl.samplemap.Obj.Var;
 import com.santeh.rjhonsl.samplemap.R;
 
 import org.joda.time.DateTime;
@@ -44,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.crypto.Cipher;
 
@@ -66,6 +70,7 @@ public class Helper {
         public static String URL_DELETE_POND_BY_ID      = "http://mysanteh.site50.net/santehweb/deletePondInfoByID.php";
 
         public static String URL_INSERT_PONDINFO        = "http://mysanteh.site50.net/santehweb/insertPondInformation.php";
+        public static String URL_INSERT_LOGINLOCATION   = "http://mysanteh.site50.net/santehweb/insertLoginLocationOffUser.php";
 
         public static String URL_UPDATE_PONDINFO_BY_ID  ="http://mysanteh.site50.net/santehweb/updatePondInformationByID.php";
 
@@ -164,6 +169,23 @@ public class Helper {
                 public static String customerID = "customerID";
             }
         }
+
+        public static void setGlobalVar_currentUserID(int ID, Activity activity){
+            ((Var) activity.getApplication()).setCurrentuser(ID);
+        }
+
+        public static void setGlobalVar_currentlevel(int lvl, Activity activity){
+            ((Var) activity.getApplication()).setCurrentuserLvl(lvl);
+        }
+
+        public static int getGlobalVar_currentUserID( Activity activity ){
+            return  ((Var) activity.getApplication()).getCurrentuser();
+        }
+
+        public static int getGlobalVar_currentlevel( Activity activity ){
+            return  ((Var) activity.getApplication()).getCurrentuserLvl();
+        }
+
     }
 
 
@@ -578,4 +600,48 @@ public class Helper {
         }
     }
 
-}
+
+    public static LatLng getLastKnownLocation(Context context){
+
+            String location_context = Context.LOCATION_SERVICE;
+            LocationManager mLocationManager = (LocationManager) context.getSystemService(location_context);
+
+            List<String> providers = mLocationManager.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers) {
+                final Location l = mLocationManager.getLastKnownLocation(provider);
+//            int d = Log.d("last known location, provider: %s, location: %s", provider);
+
+                if (l == null) {
+                    continue;
+                }
+                if (bestLocation == null
+                        || l.getAccuracy() < bestLocation.getAccuracy()) {
+//                Log.d("found best last known location: %s", String.valueOf(l));
+                    bestLocation = l;
+                }
+            }
+            if (bestLocation == null) {
+                assert bestLocation != null;
+                bestLocation.setLatitude(0.0);
+                bestLocation.setLongitude(0.0);
+                return null;
+            }
+            return new LatLng(bestLocation.getLatitude(), bestLocation.getLongitude());
+    }
+
+
+    public static boolean isBundledKeywordNotNull(String keyword, Bundle extras){
+            if (extras.getString(keyword) != null) {
+                Log.d("EXTRAS", "true");
+                return true;
+            }else {
+                Log.d("EXTRAS", "false");
+                return false;
+            }
+    }
+
+
+
+
+}//end of class
