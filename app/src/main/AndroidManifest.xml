@@ -73,7 +73,7 @@
                   android:label="Edit Customer Info">
         </activity>
 
-        <activity android:name=".Main.Activity_MainPond"
+        <activity android:name=".Main.Activity_ManagePonds"
                   android:label="Pond Information">
         </activity>
 
@@ -91,6 +91,7 @@
         </activity>
 
         <activity android:name=".Main.Activity_LoginScreen"
+                  android:noHistory="true"
                   android:label="Log in">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -57,6 +57,11 @@ import javax.crypto.Cipher;
 public class Helper {
 
     public static class variables{
+
+        public static final String ACTIVITY_LOG_TYPE_FARM_REPORTING= "1";
+        public static final String ACTIVITY_LOG_TYPE_TSR_MONITORING= "2";
+        public static final String ACTIVITY_LOG_TYPE_ADMIN_ACTIVITY= "3";
+
         public static String URL_SELECT_ALL_CUSTINFO    = "http://mysanteh.site50.net/santehweb/selectAllCustomerInfo.php";
         public static String URL_SELECT_ALL_CUSTINFO_LEFTJOIN_PONDINFO    = "http://mysanteh.site50.net/santehweb/selectCustinfoLeftJoinPondinf.php";
         public static String URL_SELECT_CUSTINFO_BY_ID  = "http://mysanteh.site50.net/santehweb/selectByID.php";
@@ -185,6 +190,35 @@ public class Helper {
         public static int getGlobalVar_currentlevel( Activity activity ){
             return  ((Var) activity.getApplication()).getCurrentuserLvl();
         }
+
+
+        public static String getGlobalVar_currentUsername( Activity activity ){
+            return  ((Var) activity.getApplication()).getCurrentUserName();
+        }
+
+        public static void setGlobalVar_currentUsername(String username, Activity activity ){
+            ((Var) activity.getApplication()).setCurrentUserName(username);
+        }
+
+
+        public static String getGlobalVar_currentUserFirstname( Activity activity ){
+            return  ((Var) activity.getApplication()).getCurrentUserFirstname();
+        }
+
+        public static void setGlobalVar_currentFirstname(String firstname, Activity activity ){
+            ((Var) activity.getApplication()).setCurrentUserFirstname(firstname);
+        }
+
+
+        public static String getGlobalVar_currentUserLastname( Activity activity ){
+            return  ((Var) activity.getApplication()).getCurrentUserLastname();
+        }
+
+        public static void setGlobalVar_currentLastname(String lastname, Activity activity ){
+            ((Var) activity.getApplication()).setCurrentUserLastname(lastname);
+        }
+
+
 
     }
 

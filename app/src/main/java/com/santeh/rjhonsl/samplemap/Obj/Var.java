@@ -18,11 +18,39 @@ public class Var extends Application {
 //    intent.putExtra("userdescription", listaccounts.get(0).getAccountlevelDescription());
 
     public int currentuser;
-
-
     public int currentuserLvl;
+    private String currentUserName;
+    private String currentUserFirstname;
+    private String currentUserLastname;
+
 
     private GoogleMap googleMap;
+
+
+    public String getCurrentUserName() {
+        return currentUserName;
+    }
+
+    public void setCurrentUserName(String currentUserName) {
+        this.currentUserName = currentUserName;
+    }
+
+    public String getCurrentUserFirstname() {
+        return currentUserFirstname;
+    }
+
+    public void setCurrentUserFirstname(String currentUserFirstname) {
+        this.currentUserFirstname = currentUserFirstname;
+    }
+
+    public String getCurrentUserLastname() {
+        return currentUserLastname;
+    }
+
+    public void setCurrentUserLastname(String currentUserLastname) {
+        this.currentUserLastname = currentUserLastname;
+    }
+
 
     public GoogleMap getGoogleMap() {
         return googleMap;

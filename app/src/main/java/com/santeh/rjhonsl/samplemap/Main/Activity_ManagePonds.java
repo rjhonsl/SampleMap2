@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Created by rjhonsl on 8/13/2015.
  */
-public class Activity_MainPond extends Activity {
+public class Activity_ManagePonds extends Activity {
 
     EditText txtpondId, txtSpecie, txtDateofStocking, txtQuantity, txtculturetype, txtarea, txtRemarks, txtsizeOfStock;
     TextView txttotalPonds, txtTotalQty;
@@ -56,7 +56,7 @@ public class Activity_MainPond extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainpond);
-        activity = Activity_MainPond.this;
+        activity = Activity_ManagePonds.this;
 
         PD = new ProgressDialog(this);
         PD.setMessage("Updating database. Please wait....");
@@ -65,16 +65,16 @@ public class Activity_MainPond extends Activity {
         Bundle extras = getIntent().getExtras();
         if (extras !=null){
             id = extras.getInt("id");
-            Helper.toastShort(activity, "ID: " + id);
+//            Helper.toastShort(activity, "ID: " + id);
             getdataByID(id);
         }else{
-            Helper.toastShort(activity, "ID has not been received.");
+//            Helper.toastShort(activity, "ID has not been received.");
             id=42;
             getdataByID(42);
         }
 
 
-        Helper.hidekeyboardOnLoad(Activity_MainPond.this);
+        Helper.hidekeyboardOnLoad(Activity_ManagePonds.this);
 
         txtpondId           = (EditText) findViewById(R.id.txt_pondetails_pondID);
         txtSpecie           = (EditText) findViewById(R.id.txt_pondDetails_specie);
@@ -153,7 +153,7 @@ public class Activity_MainPond extends Activity {
                         pondIdArray[i] = String.valueOf(pondInfoList.get(i).getPondID());
                     }
 
-                    final Dialog d = Helper.createCustomListDialog(Activity_MainPond.this, pondIdArray, "POND ID");
+                    final Dialog d = Helper.createCustomListDialog(Activity_ManagePonds.this, pondIdArray, "POND ID");
                     ListView lvSpecie = (ListView) d.findViewById(R.id.dialog_list_listview);
                     lvSpecie.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -197,7 +197,7 @@ public class Activity_MainPond extends Activity {
                         url = Helper.variables.URL_UPDATE_PONDINFO_BY_ID;
                     }
 
-                    final Dialog d = Helper.createCustomDialoYesNO(Activity_MainPond.this, R.layout.dialog_material_yesno, prompt, title, leftBtn, "Cancel");
+                    final Dialog d = Helper.createCustomDialoYesNO(Activity_ManagePonds.this, R.layout.dialog_material_yesno, prompt, title, leftBtn, "Cancel");
                     d.show();
                     Button yes = (Button) d.findViewById(R.id.btn_dialog_yesno_opt1);
                     Button no  = (Button) d.findViewById(R.id.btn_dialog_yesno_opt2);
@@ -287,7 +287,7 @@ public class Activity_MainPond extends Activity {
             @Override
             public void onClick(View v) {
                 final String specie[] = Helper.variables.ARRAY_SPECIES;
-                final Dialog d = Helper.createCustomListDialog(Activity_MainPond.this, specie, "SPECIES");
+                final Dialog d = Helper.createCustomListDialog(Activity_ManagePonds.this, specie, "SPECIES");
                 ListView lvSpecie = (ListView) d.findViewById(R.id.dialog_list_listview);
                 lvSpecie.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -303,7 +303,7 @@ public class Activity_MainPond extends Activity {
             @Override
             public void onClick(View v) {
                 final String system[] = Helper.variables.ARRAY_CULTURE_SYSTEM;
-                final Dialog d = Helper.createCustomListDialog(Activity_MainPond.this, system, "CULTURE SYSTEMS");
+                final Dialog d = Helper.createCustomListDialog(Activity_ManagePonds.this, system, "CULTURE SYSTEMS");
                 ListView lvsystems = (ListView) d.findViewById(R.id.dialog_list_listview);
                 lvsystems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -323,7 +323,7 @@ public class Activity_MainPond extends Activity {
                 int[] date;
                 int month, day, year;
 
-                final Dialog d = Helper.createCustomDatePicker(Activity_MainPond.this);
+                final Dialog d = Helper.createCustomDatePicker(Activity_ManagePonds.this);
                 final DatePicker datePicker = (DatePicker) d.findViewById(R.id.dialog_datepicker);
                 Button btnok = (Button) d.findViewById(R.id.dialog_datepicker_btnok);
 
@@ -397,7 +397,7 @@ public class Activity_MainPond extends Activity {
                 txtpondId.getText().toString().equalsIgnoreCase("")
                 )
         {
-            final Dialog d = Helper.createCustomDialogOKOnly(Activity_MainPond.this, "OOPS",
+            final Dialog d = Helper.createCustomDialogOKOnly(Activity_ManagePonds.this, "OOPS",
                     "There seems to be field(s) that you have left behind... Please check then try again.", "OK");
             TextView ok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
             d.show();
@@ -428,7 +428,7 @@ public class Activity_MainPond extends Activity {
 
 
                                 btnhandler.onresume();
-                                final Dialog d = Helper.createCustomDialogOKOnly(Activity_MainPond.this, title,
+                                final Dialog d = Helper.createCustomDialogOKOnly(Activity_ManagePonds.this, title,
                                         prompt, "OK");
                                 TextView ok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
                                 d.show();
@@ -453,7 +453,7 @@ public class Activity_MainPond extends Activity {
                             prompt = "Something went wrong. Please try again later.";
                             PD.dismiss();
 
-                            final Dialog d = Helper.createCustomDialogOKOnly(Activity_MainPond.this, title,
+                            final Dialog d = Helper.createCustomDialogOKOnly(Activity_ManagePonds.this, title,
                                     prompt, "OK");
                             TextView ok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
                             d.setCancelable(false);
@@ -470,7 +470,7 @@ public class Activity_MainPond extends Activity {
                 public void onErrorResponse(VolleyError error) {
                     PD.dismiss();
 
-                    final Dialog d = Helper.createCustomDialogOKOnly(Activity_MainPond.this, "OOPS",
+                    final Dialog d = Helper.createCustomDialogOKOnly(Activity_ManagePonds.this, "OOPS",
                             "Something went wrong. error("+ error +")", "OK");
                     TextView ok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
                     d.setCancelable(false);
@@ -518,7 +518,7 @@ public class Activity_MainPond extends Activity {
 
             // Adding request to request queue
             MyVolleyAPI api = new MyVolleyAPI();
-            api.addToReqQueue(postRequest, Activity_MainPond.this);
+            api.addToReqQueue(postRequest, Activity_ManagePonds.this);
         }
 
     }
@@ -567,7 +567,7 @@ public class Activity_MainPond extends Activity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    final Dialog d = Helper.createCustomDialogOKOnly(Activity_MainPond.this, "OOPS",
+                    final Dialog d = Helper.createCustomDialogOKOnly(Activity_ManagePonds.this, "OOPS",
                             "Something went wrong. Please try again later.", "OK");
                     TextView ok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
                     d.setCancelable(false);
@@ -591,7 +591,7 @@ public class Activity_MainPond extends Activity {
 
             // Adding request to request queue
             MyVolleyAPI api = new MyVolleyAPI();
-            api.addToReqQueue(postRequest, Activity_MainPond.this);
+            api.addToReqQueue(postRequest, Activity_ManagePonds.this);
 
         }
 

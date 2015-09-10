@@ -46,7 +46,7 @@ public class Activity_FarmViewOptions extends Activity{
 
 
                 int converted = Integer.parseInt(customerID.trim());
-                Intent intent = new Intent(Activity_FarmViewOptions.this, Activity_MainPond.class);
+                Intent intent = new Intent(Activity_FarmViewOptions.this, Activity_ManagePonds.class);
                 intent.putExtra("id", converted );
                 startActivity(intent);
 

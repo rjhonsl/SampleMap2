@@ -203,7 +203,7 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
         btnAddPond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(Activity_AddMarker_CustomerInfo.this, Activity_MainPond.class);
+                final Intent intent = new Intent(Activity_AddMarker_CustomerInfo.this, Activity_ManagePonds.class);
                 startActivity(intent);
             }
         });

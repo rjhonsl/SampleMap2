@@ -192,10 +192,10 @@ public class Activity_LoginScreen extends Activity{
 
 //                                            Helper.toastShort(activity, "Success: "+accountDetail);
                                             Intent intent = new Intent(Activity_LoginScreen.this, MapsActivity.class);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK);
-
                                             Helper.variables.setGlobalVar_currentlevel(listaccounts.get(0).getUserlevel(), activity);
                                             Helper.variables.setGlobalVar_currentUserID(listaccounts.get(0).getUserid(), activity);
+                                            Helper.variables.setGlobalVar_currentFirstname(listaccounts.get(0).getFirstname(), activity);
+                                            Helper.variables.setGlobalVar_currentLastname(listaccounts.get(0).getLastname(), activity);
 
                                             intent.putExtra("userid", listaccounts.get(0).getUserid());
                                             intent.putExtra("userlevel", listaccounts.get(0).getUserlevel());

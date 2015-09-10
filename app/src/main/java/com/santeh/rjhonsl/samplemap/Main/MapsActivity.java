@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -83,7 +84,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng curLatlng;
 
     TextView textView, tvlat, tvlong;
-    TextView nav_fingerlings, nav_Stockings, nav_sperms, nav_maptype, nav_displayAllMarkers, nav_settings, nav_growout;
+    TextView nav_fingerlings, nav_Stockings, nav_sperms, nav_maptype, nav_displayAllMarkers, nav_settings, nav_growout, txtusername;
 
     EditText editSearch;
     String Stritem;
@@ -125,6 +126,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map_add_marker = (ImageButton) findViewById(R.id.btnaddMarker);
         nav_growout = (TextView) findViewById(R.id.txt_Nav_growOut);
         textView = (TextView) findViewById(R.id.latLong);
+        txtusername = (TextView) findViewById(R.id.username);
 
 
 
@@ -230,6 +232,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.setMyLocationEnabled(true);
         maps = map;
         ((Var) this.getApplication()).setGoogleMap(map);
+        txtusername.setText(Helper.variables.getGlobalVar_currentUserFirstname(context) + " " + Helper.variables.getGlobalVar_currentUserLastname(context));
         Log.d("PROCESS", "onMapReady");
 
 
@@ -376,12 +379,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String ID = marker.getId(), curId = "";
                 for (int i = 0; i < marker.getTitle().length() ; i++) {
                    char c = marker.getTitle().charAt(i);
-
                     if (c=='-'){
                         break;
                     }
                     curId = curId+c;
-
                 }
 
                 String[] details = marker.getTitle().split("-");
@@ -658,7 +659,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                               } else {
                                   PD.dismiss();
                                   extrass = null;
-                                  Helper.toastShort(context, "Location found :) " + " " + userid + " " + curlat + " " + curLong + " "  + response);
+                                  Helper.toastShort(context, "Location found :) "
+//                                          + "" + " " + userid + " " + curlat + " " + curLong + " "  + response
+                                  );
                               }
 
                           }
@@ -775,6 +778,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
            return null;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        final Dialog d = Helper.createCustomDialoYesNO(context, R.layout.dialog_material_yesno, "Do you wish to wish to exit the app? You will have to login next time.", "EXIT", "YES", "NO");
+        d.show();
+        Button yes = (Button) d.findViewById(R.id.btn_dialog_yesno_opt1);
+        Button no = (Button) d.findViewById(R.id.btn_dialog_yesno_opt2);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.hide();
+                finishAffinity();
+                Intent setIntent = new Intent(Intent.ACTION_MAIN);
+                setIntent.addCategory(Intent.CATEGORY_HOME);
+                setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(setIntent);
+            }
+        });
+
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.hide();
+            }
+        });
+
+
     }
 
 
