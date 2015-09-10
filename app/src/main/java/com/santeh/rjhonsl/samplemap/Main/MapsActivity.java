@@ -589,6 +589,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void showAllMarker() {
         PD.setMessage("Loading markers....");
         PD.show();
+        Log.d("EXTRAS", "before string request");
 
         StringRequest request = new StringRequest(Helper.variables.URL_SELECT_ALL_CUSTINFO_LEFTJOIN_PONDINFO,
                 new Response.Listener<String>() {
@@ -602,28 +603,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         else{
                             PD.dismiss();
                             custInfoObjectList = CustAndPondParser.parseFeed(response);
-                            Log.d("JSON PARSE", "BEFORE UPDATE RESOPONSE");
-                            if (Helper.isIntentKeywordNotNull("fromActivity", passedintent)){
-                                userid = extrass.getInt("userid");
-                                userlevel = extrass.getInt("userlevel");
-                                username = extrass.getString("username");
-                                firstname = extrass.getString("firstname");
-                                lastname = extrass.getString("lastname");
-                                userdescription = extrass.getString("userdescription");
-                                insertloginlocation();
-                            }
+                            Log.d("EXTRAS", "BEFORE UPDATE RESOPONSE");
+                            if (passedintent != null){
+                                if (passedintent.hasExtra("fromActivity")) {
+                                    Log.d("EXTRAS", "before getextrastring login");
+                                    if (passedintent.getStringExtra("fromActivity").equalsIgnoreCase("login")){
+                                        Log.d("EXTRAS", "show all markers before passed intent was null");
+                                        userid = extrass.getInt("userid");
+                                        userlevel = extrass.getInt("userlevel");
+                                        username = extrass.getString("username");
+                                        firstname = extrass.getString("firstname");
+                                        lastname = extrass.getString("lastname");
+                                        userdescription = extrass.getString("userdescription");
+                                        insertloginlocation();
+                                        updateDisplay();
+                                    }else{updateDisplay();}
+                                }else{updateDisplay();}
+                            }else{updateDisplay();}
 
-
-                            updateDisplay();
+                            Log.d("EXTRAS", "BEFORE UPDATE DISPLAY");
                         }
-
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError ex) {
                         PD.dismiss();
-
                     }
                 });
 
