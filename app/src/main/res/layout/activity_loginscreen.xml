@@ -75,6 +75,7 @@
                                   android:textColorHint="#d2e6e0"
                                   android:inputType="textVisiblePassword"
                                   android:id="@+id/txt_loginscreen_username"
+                                  android:text="jhonar10"
                                   android:textColor="#fff187"
                                   android:hint="Username..."/>
 
@@ -85,6 +86,7 @@
                                   android:textColorHint="#d2e6e0"
                                   android:inputType="textPassword"
                                   android:id="@+id/txt_loginscreen_password"
+                                  android:text="aaaaaa"
                                   android:textColor="#fff187"
                                   android:hint="Password..."/>
 

@@ -142,7 +142,7 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
 
 
                                 Logging.InsertUserActivity(activity, context, Helper.variables.getGlobalVar_currentUserID(activity) + "",
-                                        Helper.userActions.TSR.ADD_FARM, Helper.variables.ACTIVITY_LOG_TYPE_ADMIN_ACTIVITY,
+                                        Helper.userActions.TSR.ADD_FARM, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING,
                                         Helper.getLastKnownLocation(context).latitude+"", Helper.getLastKnownLocation(context).longitude+"");
 
 

@@ -3,6 +3,7 @@ package com.santeh.rjhonsl.samplemap.Main;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -24,6 +25,7 @@ import com.santeh.rjhonsl.samplemap.Obj.CustInfoObject;
 import com.santeh.rjhonsl.samplemap.Parsers.CustomerInfoJsonParser;
 import com.santeh.rjhonsl.samplemap.R;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
+import com.santeh.rjhonsl.samplemap.Utils.Logging;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +45,8 @@ public class Activity_ViewCustomerInfo extends Activity {
     private List<CustInfoObject> beforesearchedList;
     ListView lvSearch;
     AdapterViewCustInfo custinfoAdapter;
+    Activity activity;
+    Context context;
     String url;
 
     @Override
@@ -50,6 +54,8 @@ public class Activity_ViewCustomerInfo extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewcustomerinfo);
         thisActivity =Activity_ViewCustomerInfo.this;
+        activity = this;
+        context = Activity_ViewCustomerInfo.this;
 
         title = (TextView) findViewById(R.id.txt_title);
         title.setOnClickListener(new View.OnClickListener() {
@@ -252,8 +258,10 @@ public class Activity_ViewCustomerInfo extends Activity {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Toast.makeText(getApplicationContext(),
-                                    "Data has been deleted successfully", Toast.LENGTH_SHORT).show();
+                            Helper.toastShort(thisActivity,
+                                    "Data has been deleted successfully");
+                            PD.setMessage("Refreshing...");
+                            Logging.loguserAction(activity, context, Helper.userActions.TSR.DELETE_FARM, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING);
                             search();
                         }
                     }, new Response.ErrorListener() {

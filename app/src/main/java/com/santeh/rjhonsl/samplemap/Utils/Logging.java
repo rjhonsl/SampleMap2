@@ -19,6 +19,14 @@ import java.util.Map;
 public class Logging {
     static boolean isRecorded = false;
 
+    public static boolean loguserAction(Activity activity, Context context, String userAction, String actionType ){
+       return Logging.InsertUserActivity(activity, context, Helper.variables.getGlobalVar_currentUserID(activity) + "",
+                userAction, actionType,
+                Helper.getLastKnownLocation(context).latitude+"", Helper.getLastKnownLocation(context).longitude+"");
+    }
+
+
+
     public static boolean InsertUserActivity(final Activity activity, final Context context,
     final String userid, final String action, final String actiontype, final String latitude, final String longitude){
 
