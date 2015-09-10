@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -635,6 +636,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
           if (extrass.getString("fromActivity").equalsIgnoreCase("login")) {
               Log.d("EXTRAS", "fromactivity = login");
 
+
               userid = extrass.getInt("userid");
               userlevel = extrass.getInt("userlevel");
               username = extrass.getString("username");
@@ -642,16 +644,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
               lastname = extrass.getString("lastname");
               userdescription = extrass.getString("userdescription");
 
-              StringRequest request = new StringRequest(Helper.variables.URL_INSERT_LOGINLOCATION,
+
+
+
+              StringRequest postRequest = new StringRequest(Request.Method.POST, Helper.variables.URL_INSERT_LOGINLOCATION,
                       new Response.Listener<String>() {
                           @Override
-                          public void onResponse(String response) {
+                          public void onResponse(final String response) {
 
                               if (response.substring(1, 2).equalsIgnoreCase("0")) {
                                   PD.dismiss();
                                   Helper.toastShort(context, "Something Happened. Please try again later" + response);
                               } else {
                                   PD.dismiss();
+                                  extrass = null;
                                   Helper.toastShort(context, "Location found :) " + " " + userid + " " + curlat + " " + curLong + " "  + response);
                               }
 
@@ -677,9 +683,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
               // Adding request to request queue
               MyVolleyAPI api = new MyVolleyAPI();
-              api.addToReqQueue(request, MapsActivity.this);
-
-
+              api.addToReqQueue(postRequest, MapsActivity.this);
           }
 
         }

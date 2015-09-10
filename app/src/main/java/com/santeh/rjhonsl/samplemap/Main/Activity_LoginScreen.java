@@ -195,6 +195,7 @@ public class Activity_LoginScreen extends Activity{
                                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NO_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK);
 
                                             Helper.variables.setGlobalVar_currentlevel(listaccounts.get(0).getUserlevel(), activity);
+                                            Helper.variables.setGlobalVar_currentUserID(listaccounts.get(0).getUserid(), activity);
 
                                             intent.putExtra("userid", listaccounts.get(0).getUserid());
                                             intent.putExtra("userlevel", listaccounts.get(0).getUserlevel());
