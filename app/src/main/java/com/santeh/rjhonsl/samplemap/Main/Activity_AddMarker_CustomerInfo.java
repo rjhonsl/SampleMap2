@@ -138,6 +138,7 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
                         @Override
                         public void onResponse(String response) {
 
+                            Helper.toastShort(activity, response);
 
 
                             PD.dismiss();
@@ -189,6 +190,11 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
 
 
     }
+
+
+
+
+
 
 
     private void initOnClickListeners() {

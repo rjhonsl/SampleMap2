@@ -55,6 +55,21 @@ import javax.crypto.Cipher;
  */
 public class Helper {
 
+    public static class userActions{
+        public static class TSR{
+
+            public static String ADD_FARM   ="Add Farm Information";
+            public static String DELETE_FARM="Delete Farm Information";
+            public static String Edit_FARM  ="Edit Farm Information";
+
+            public static String ADD_POND   ="Add Pond Information";
+            public static String DELETE_POND="Delete Pond Information";
+            public static String Edit_POND  ="Edit Pond Information";
+
+
+        }
+    }
+
     public static class variables{
 
         public static final String ACTIVITY_LOG_TYPE_FARM_REPORTING= "1";
@@ -75,6 +90,7 @@ public class Helper {
 
         public static String URL_INSERT_PONDINFO        = "http://mysanteh.site50.net/santehweb/insertPondInformation.php";
         public static String URL_INSERT_LOGINLOCATION   = "http://mysanteh.site50.net/santehweb/insertLoginLocationOffUser.php";
+        public static String URL_INSERT_USER_ACTIVITY   = "http://mysanteh.site50.net/santehweb/insertUserActivity.php";
 
         public static String URL_UPDATE_PONDINFO_BY_ID  ="http://mysanteh.site50.net/santehweb/updatePondInformationByID.php";
 
