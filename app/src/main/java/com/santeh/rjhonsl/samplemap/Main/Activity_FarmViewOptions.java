@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.santeh.rjhonsl.samplemap.R;
-import com.santeh.rjhonsl.samplemap.Utils.Helper;
 
 /**
  * Created by rjhonsl on 8/24/2015.
@@ -35,7 +34,7 @@ public class Activity_FarmViewOptions extends Activity{
             customerID = "null";
         }
 
-        Helper.toastLong(activity, "id"+customerID);
+//        Helper.toastLong(activity, "id"+customerID);
         txtManagePonds = (TextView) findViewById(R.id.txt_farmoptions_managePonds);
         txtWeeklyReports = (TextView) findViewById(R.id.txt_farmoptions_WeeklyReports);
 

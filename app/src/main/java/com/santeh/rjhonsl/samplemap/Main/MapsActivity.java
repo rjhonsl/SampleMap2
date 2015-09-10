@@ -94,6 +94,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<CustInfoObject> searchedIDlist = null;
 
     Bundle extrass;
+    Intent passedintent;
 
 
     @Override
@@ -108,6 +109,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         extrass = getIntent().getExtras();
+        passedintent = getIntent();
 
         //Connect app to google maps api
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -186,6 +188,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void initMarkers() {
         Bundle extras = getIntent().getExtras();
+
         if (extras != null) {
             if (extras.getString("fromActivity") != null){
                 String from = extras.getString("fromActivity");
@@ -600,16 +603,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             PD.dismiss();
                             custInfoObjectList = CustAndPondParser.parseFeed(response);
                             Log.d("JSON PARSE", "BEFORE UPDATE RESOPONSE");
-                            if (Helper.isBundledKeywordNotNull("login", extrass)){
+                            if (Helper.isIntentKeywordNotNull("fromActivity", passedintent)){
                                 userid = extrass.getInt("userid");
                                 userlevel = extrass.getInt("userlevel");
                                 username = extrass.getString("username");
                                 firstname = extrass.getString("firstname");
                                 lastname = extrass.getString("lastname");
                                 userdescription = extrass.getString("userdescription");
-
+                                insertloginlocation();
                             }
-                            insertloginlocation();
+
 
                             updateDisplay();
                         }
@@ -633,7 +636,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         PD.setMessage("Getting location data...");
 
 
-        if (Helper.isBundledKeywordNotNull("fromActivity", extrass)){
+        if (Helper.isIntentKeywordNotNull("fromActivity", passedintent)){
           if (extrass.getString("fromActivity").equalsIgnoreCase("login")) {
               Log.d("EXTRAS", "fromactivity = login");
 
@@ -659,6 +662,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                               } else {
                                   PD.dismiss();
                                   extrass = null;
+                                  passedintent=null;
                                   Helper.toastShort(context, "Location found :) "
 //                                          + "" + " " + userid + " " + curlat + " " + curLong + " "  + response
                                   );

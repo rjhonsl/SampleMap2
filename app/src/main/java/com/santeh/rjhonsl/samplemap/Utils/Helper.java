@@ -12,7 +12,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -665,8 +664,9 @@ public class Helper {
     }
 
 
-    public static boolean isBundledKeywordNotNull(String keyword, Bundle extras){
-            if (extras.getString(keyword) != null) {
+    public static boolean isIntentKeywordNotNull(String keyword, Intent extras){
+
+            if (extras.hasExtra(keyword)) {
                 Log.d("EXTRAS", "true");
                 return true;
             }else {
