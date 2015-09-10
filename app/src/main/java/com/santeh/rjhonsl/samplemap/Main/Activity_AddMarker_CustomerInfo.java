@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -23,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.santeh.rjhonsl.samplemap.APIs.MyVolleyAPI;
 import com.santeh.rjhonsl.samplemap.R;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
+import com.santeh.rjhonsl.samplemap.Utils.Logging;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -138,29 +138,39 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
                         @Override
                         public void onResponse(String response) {
 
-                            Helper.toastShort(activity, response);
+                            if (!Helper.extractResponseCodeBySplit(response).equalsIgnoreCase("0")) {
 
 
-                            PD.dismiss();
-                            Dialog d = Helper.createCustomDialogOKOnly(Activity_AddMarker_CustomerInfo.this, "SUCCESS",
-                                    "You have successfully added " + txtContactName.getText().toString() + " to database", "OK");
-                            TextView ok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
-                            d.setCancelable(false);
-                            d.show();
-                            ok.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    finish();
-                                }
-                            });
+                                Logging.InsertUserActivity(activity, context, Helper.variables.getGlobalVar_currentUserID(activity) + "",
+                                        Helper.userActions.TSR.ADD_FARM, Helper.variables.ACTIVITY_LOG_TYPE_ADMIN_ACTIVITY,
+                                        Helper.getLastKnownLocation(context).latitude+"", Helper.getLastKnownLocation(context).longitude+"");
+
+
+                                PD.dismiss();
+                                Dialog d = Helper.createCustomDialogOKOnly(Activity_AddMarker_CustomerInfo.this, "SUCCESS",
+                                        "You have successfully added " + txtContactName.getText().toString() + " to database", "OK");
+                                TextView ok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
+                                d.setCancelable(false);
+                                d.show();
+                                ok.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        finish();
+                                    }
+                                });
+
+
+                            }else {
+                                Helper.toastShort(activity, getResources().getString(R.string.VolleyUnexpectedError));
+                            }
+
 
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     PD.dismiss();
-                    Toast.makeText(Activity_AddMarker_CustomerInfo.this,
-                            "Failed to search " + error, Toast.LENGTH_SHORT).show();
+                    Helper.toastShort(activity, "Failed to connect to server.");
                 }
             }) {
                 @Override

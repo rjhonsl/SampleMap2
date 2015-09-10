@@ -590,7 +590,6 @@ public class Helper {
                 coloncounter=coloncounter+1;
             }
         }
-
         return responseCode;
     }
 
@@ -690,6 +689,17 @@ public class Helper {
                 return false;
             }
     }
+
+    public static String extractResponseCodeBySplit(String response) {
+        String[] splitted = response.split(":");
+        return splitted[1].substring(0,1);
+    }
+
+    public static String getStringResource(Activity activity, int resID) {
+        return activity.getResources().getString(resID);
+    }
+
+
 
 
 

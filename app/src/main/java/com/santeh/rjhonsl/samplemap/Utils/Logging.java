@@ -17,7 +17,7 @@ import java.util.Map;
  * Created by rjhonsl on 9/10/2015.
  */
 public class Logging {
-    static boolean islogged;
+    static boolean isRecorded = false;
 
     public static boolean InsertUserActivity(final Activity activity, final Context context,
     final String userid, final String action, final String actiontype, final String latitude, final String longitude){
@@ -29,18 +29,18 @@ public class Logging {
                     public void onResponse(String response) {
                         if (!response.substring(1,2).equalsIgnoreCase("0")) {
                             Log.d("USER LOGGING", "Activity logging for user "+userid+" SUCEEDED. " + response);
-                            islogged = true;
+                            isRecorded = true;
                         }
                         else{
-                            islogged = false;
                             Log.d("USER LOGGING", "Activity logging for user "+userid+" FAILED. " + response);
+                            InsertUserActivity(activity, context, userid, action, actiontype, latitude, longitude);
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("USER LOGGING", "Activity logging for user "+userid+" FAILED. " + error);
-                islogged = false;
+                InsertUserActivity(activity, context, userid, action, actiontype, latitude, longitude);
             }
         }) {
             @Override
@@ -60,6 +60,6 @@ public class Logging {
         // Adding request to request queue
         MyVolleyAPI api = new MyVolleyAPI();
         api.addToReqQueue(postRequest, context);
-        return islogged;
+        return isRecorded;
     }
 }
