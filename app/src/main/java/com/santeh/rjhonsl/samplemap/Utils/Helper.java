@@ -30,8 +30,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -705,7 +703,6 @@ public class Helper {
 
 
     public static boolean isIntentKeywordNotNull(String keyword, Intent extras){
-
             if (extras.hasExtra(keyword)) {
                 Log.d("EXTRAS", "true");
                 return true;

@@ -8,33 +8,35 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.santeh.rjhonsl.samplemap.R;
+import com.santeh.rjhonsl.samplemap.Utils.FusedLocation;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
 
 /**
  * Created by rjhonsl on 9/11/2015.
  */
-public class MapsActivity_FusedLocationSample extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapsActivity_FusedLocationSample extends AppCompatActivity implements OnMapReadyCallback {
 
     Activity activity;
     Context context;
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
-
+    FusedLocation fusedLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        buildGoogleApiClient();
-
         activity = this;
         context = MapsActivity_FusedLocationSample.this;
+
+        fusedLocation = new FusedLocation(context, activity);
+        fusedLocation.connectToApiClient();
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -46,55 +48,26 @@ public class MapsActivity_FusedLocationSample extends AppCompatActivity implemen
             @Override
             public void onClick(View v) {
 
-               if(Helper.isLocationEnabled(context)){
-                   mGoogleApiClient.connect();
-                   if (mGoogleApiClient.isConnected() )
-                   {
-                       Helper.toastLong(activity, String.valueOf(mLastLocation.getLatitude()) + " " + String.valueOf(mLastLocation.getLongitude()));
-                       mGoogleApiClient.disconnect();
-                   }
-               }
+                if (Helper.isLocationEnabled(context)){
+                    LatLng latLng =   fusedLocation.getLastKnowLocation();
+                    Helper.toastShort(activity, latLng.latitude + " " + latLng.longitude);
+                }else
+                {
+                    Helper.toastShort(activity, "Location not available");
+                }
+
             }
         });
 
-
     }
 
-    protected synchronized void buildGoogleApiClient() {
-         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-    
+
     
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         googleMap.setMyLocationEnabled(true);
-
-
     }
 
-    @Override
-    public void onConnected(Bundle bundle) {
-         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                mGoogleApiClient);
-        if (mLastLocation != null) {
-            Helper.toastLong(activity, String.valueOf(mLastLocation.getLatitude()) + " " + String.valueOf(mLastLocation.getLongitude()));
-        }
 
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
 }

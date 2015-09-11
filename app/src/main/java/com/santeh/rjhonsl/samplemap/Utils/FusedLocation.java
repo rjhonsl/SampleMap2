@@ -13,18 +13,31 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Created by rjhonsl on 9/11/2015.
  */
+
+
 public class FusedLocation implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
 
-    public synchronized void buildGoogleApiClient(Context context) {
+    Context fixContext;
+    Activity fixActivity;
+    LatLng latLng;
+
+    public FusedLocation(Context context, Activity activity){
+
+        fixContext = context;
+        fixActivity = activity;
+        buildGoogleApiClient(fixContext);
+    }
+
+    public void buildGoogleApiClient(Context context) {
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-
+        connectToApiClient();
     }
 
     public void connectToApiClient() {
@@ -38,29 +51,28 @@ public class FusedLocation implements GoogleApiClient.ConnectionCallbacks, Googl
         }
     }
 
-    public LatLng getLastKnowLocation(Context context, Activity activity) {
-        LatLng latLng = new LatLng(0.0, 0.0);
-        if (Helper.isLocationEnabled(context)) {
-            if (!mGoogleApiClient.isConnected()) {
-                connectToApiClient();
-            }
 
-            if (mLastLocation != null) {
-               latLng =  new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            }
+    public LatLng getLastKnowLocation() {
+        latLng = new LatLng(0.0, 0.0);
 
-        }else{
-            Helper.toastLong(activity, "Location Service is not available");
+        disconnectFromApiClient();
+        connectToApiClient();
+
+        if (mLastLocation != null) {
+            latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        } else {
+            latLng = new LatLng(0.0, 0.0);
         }
 
         return latLng;
     }
 
     @Override
-    public void onConnected(Bundle bundle) {
-         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+    public  void onConnected(Bundle bundle) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
     }
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -72,3 +84,6 @@ public class FusedLocation implements GoogleApiClient.ConnectionCallbacks, Googl
 
     }
 }
+
+
+
