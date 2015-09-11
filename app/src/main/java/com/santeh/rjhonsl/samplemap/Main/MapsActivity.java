@@ -231,7 +231,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(final GoogleMap map) {
         map.getUiSettings().setMapToolbarEnabled(false);
-        map.getUiSettings().setZoomControlsEnabled(true);
         map.setMyLocationEnabled(true);
         maps = map;
         ((Var) this.getApplication()).setGoogleMap(map);
@@ -354,7 +353,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     }catch (Exception e){
                         dialogLocationNotAvailableOkOnly();
-                    };
+                    }
                 }
                 else {
                     dialogLocationNotAvailableOkOnly();
@@ -652,6 +651,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
               firstname = extrass.getString("firstname");
               lastname = extrass.getString("lastname");
               userdescription = extrass.getString("userdescription");
+
+              maps.getMyLocation();
 
 
 

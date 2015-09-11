@@ -93,11 +93,13 @@
         <activity android:name=".Main.Activity_LoginScreen"
                   android:noHistory="true"
                   android:label="Log in">
+
+        </activity>
+        <activity android:name=".Main.MapsActivity_FusedLocationSample" android:label="Log ">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
 
