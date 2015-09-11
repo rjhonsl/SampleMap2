@@ -351,7 +351,6 @@ public class Activity_WeeklyReports_Growout_FarmSummary extends Activity {
 
                             }
 
-
                         }
                     }, new Response.ErrorListener() {
                 @Override
