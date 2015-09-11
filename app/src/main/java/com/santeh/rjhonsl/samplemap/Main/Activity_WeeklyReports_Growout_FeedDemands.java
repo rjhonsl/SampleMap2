@@ -121,7 +121,7 @@ public class Activity_WeeklyReports_Growout_FeedDemands extends Activity {
                         public void onResponse(String response) {
                             PD.dismiss();
                             pondInfoObj = CustAndPondParser.parseFeed(response);
-                            txtheader.setText(response);
+//                            txtheader.setText(response);
                             if (!response.substring(1,2).equalsIgnoreCase("0")){
 
                                 DateTime dt = new DateTime();
@@ -132,7 +132,6 @@ public class Activity_WeeklyReports_Growout_FeedDemands extends Activity {
                                         currentDemandList = new ArrayList<CustInfoObject>();
                                         for (int i = 0; i < pondInfoObj.size(); i++) {
                                             tempOBJ = new CustInfoObject();
-
 
 
                                             String[] datesplitter = pondInfoObj.get(i).getDateStocked().split("/");

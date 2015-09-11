@@ -18,17 +18,23 @@ import java.util.Map;
  */
 public class Logging {
     static boolean isRecorded = false;
+    static  FusedLocation fusedLocation;
+    public static boolean loguserAction(Activity activity, Context context, String userAction, String actionType ) {
+        fusedLocation = new FusedLocation(context, activity);
+        fusedLocation.buildGoogleApiClient(context);
+        fusedLocation.connectToApiClient();
 
-    public static boolean loguserAction(Activity activity, Context context, String userAction, String actionType ){
-       return Logging.InsertUserActivity(activity, context, Helper.variables.getGlobalVar_currentUserID(activity) + "",
+        return Logging.InsertUserActivity(activity, context, Helper.variables.getGlobalVar_currentUserID(activity) + "",
                 userAction, actionType,
-                Helper.getLastKnownLocation(context).latitude+"", Helper.getLastKnownLocation(context).longitude+"");
+                fusedLocation.getLastKnowLocation().latitude + "", fusedLocation.getLastKnowLocation().longitude + "");
     }
 
 
 
     public static boolean InsertUserActivity(final Activity activity, final Context context,
     final String userid, final String action, final String actiontype, final String latitude, final String longitude){
+
+        fusedLocation.connectToApiClient();
 
         StringRequest postRequest = new StringRequest(Request.Method.POST,
                 Helper.variables.URL_INSERT_USER_ACTIVITY,
@@ -58,8 +64,8 @@ public class Logging {
                 params.put("userid", String.valueOf(userid));
                 params.put("action", String.valueOf(action));
                 params.put("actiontype", String.valueOf(actiontype));
-                params.put("latitude", String.valueOf(latitude));
-                params.put("longitude", String.valueOf(longitude));
+                params.put("latitude", fusedLocation.getLastKnowLocation().latitude+"");
+                params.put("longitude", fusedLocation.getLastKnowLocation().longitude+"");
 
                 return params;
             }

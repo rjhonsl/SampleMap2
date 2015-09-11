@@ -7,9 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,6 +46,7 @@ import com.santeh.rjhonsl.samplemap.Obj.CustInfoObject;
 import com.santeh.rjhonsl.samplemap.Obj.Var;
 import com.santeh.rjhonsl.samplemap.Parsers.CustAndPondParser;
 import com.santeh.rjhonsl.samplemap.R;
+import com.santeh.rjhonsl.samplemap.Utils.FusedLocation;
 import com.santeh.rjhonsl.samplemap.Utils.GPSTracker;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
 
@@ -77,11 +76,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     int zoom = 15,
         activeFilter;
 
-    Activity context;
+    Activity activity;
+    Context context;
     GoogleApiClient mGoogleApiClient;
     GoogleMap maps, googleMap;
 
-    LatLng curLatlng;
+    LatLng curLatlng, lastlatlng;
 
     TextView textView, tvlat, tvlong;
     TextView nav_fingerlings, nav_Stockings, nav_sperms, nav_maptype, nav_displayAllMarkers, nav_settings, nav_growout, txtusername;
@@ -96,11 +96,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Bundle extrass;
     Intent passedintent;
 
+    FusedLocation fusedLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        activity = MapsActivity.this;
         context = MapsActivity.this;
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
@@ -108,15 +111,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        fusedLocation = new FusedLocation(context, activity);
+        fusedLocation.buildGoogleApiClient(context);
+        fusedLocation.connectToApiClient();
+        lastlatlng = fusedLocation.getLastKnowLocation();
+
+
         extrass = getIntent().getExtras();
         passedintent = getIntent();
 
-        //Connect app to google maps api
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+
+
+
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         nav_displayAllMarkers = (TextView) findViewById(R.id.txt_Nav_displayAll);
@@ -139,52 +146,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         ActionToggleDrawerListner();
         drawerListener.syncState();
 
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-
         PD = new ProgressDialog(this);
         PD.setMessage("Getting data from server.\nPlease wait....");
         PD.setCancelable(false);
-
     }
 
 
-    private void setUpMap(){
-        googleMap.setMyLocationEnabled(true);
-
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, true);
-        Location myLocation = locationManager.getLastKnownLocation(provider);
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-        curLatlng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-        curlat = myLocation.getLatitude();
-        curLong = myLocation.getLongitude();
-
-//        Helper.map_addMarker(googleMap, new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
-//                R.drawable.ic_beenhere_red_24dp, "My Location",
-//                String.valueOf(myLocation.getLatitude() + " " + myLocation.getLongitude()), 125+"");
-
-    }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("PROCESS", "REsume");
-
-        if(activeFilter==0){
-            activeFilter = 0;
-        }
-        else{
-
-        }
-    }
 
     private void initMarkers() {
         Bundle extras = getIntent().getExtras();
@@ -207,7 +176,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         PD.dismiss();
                         }
                         else{
-                            Helper.toastShort(context, "Can't find current location. Please try again later.");
+                            Helper.toastShort(activity, "Can't find current location. Please try again later.");
                         }
 
                     }
@@ -234,36 +203,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.setMyLocationEnabled(true);
         maps = map;
         ((Var) this.getApplication()).setGoogleMap(map);
-        txtusername.setText(Helper.variables.getGlobalVar_currentUserFirstname(context) + " " + Helper.variables.getGlobalVar_currentUserLastname(context));
-        Log.d("PROCESS", "onMapReady");
 
-
+        txtusername.setText(Helper.variables.getGlobalVar_currentUserFirstname(activity) + " " + Helper.variables.getGlobalVar_currentUserLastname(activity));
         map.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+        initListners(map);
+        fusedLocation.connectToApiClient();
 
-        try{
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try{
+//            Helper.toastLong(activity, extrass.getString("lat") + " " + extrass.getString("long") );
 
-            getLastKnownLocation();
 
-            if (checkIfLocationAvailable()){
-                moveCameraAnimate(maps, getLastKnownLocation(), zoom);
-                initMarkers();
+                    if (checkIfLocationAvailable()){
+                        moveCameraAnimate(map, fusedLocation.getLastKnowLocation(), zoom);
+                        initMarkers();
+
+                    }
+                    else{
+                        PD.hide();
+                        //West avenue
+                        curlat = 14.651391;
+                        curLong = 121.029335;
+                        zoom = 9;
+
+                    }
+
+                }catch(Exception e){
+                    Helper.toastShort(activity, "Location is not available: "+e);
+                }
             }
-            else{
-                //West avenue
-                curlat = 14.651391;
-                curLong = 121.029335;
-                zoom = 9;
-            }
-
-        }catch(Exception e){
-            Helper.toastShort(context, "Location is not available: "+e);
-        }
+        }, 500);
 
 
 
+    }
 
-
-
+    private void initListners(final GoogleMap map) {
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(final LatLng latLng) {
@@ -373,7 +351,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
 
-
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -429,8 +406,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 //        getCurrentLoc();
         // Acquire a reference to the system Location Manager
-
-
     }
 
     private void dialogLocationNotAvailableOkOnly() {
@@ -527,42 +502,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private LatLng getLastKnownLocation() {
+        fusedLocation.connectToApiClient();
+        LatLng latLng = fusedLocation.getLastKnowLocation();
 
-//        GPSTracker gps = new GPSTracker(MapsActivity.this);
-//        gps.getLocation();
+        curlat = latLng.latitude;
+        curLong = latLng.longitude;
+
+//        String location_context = Context.LOCATION_SERVICE;
+//        LocationManager mLocationManager = (LocationManager) activity.getSystemService(location_context);
 //
-//        return new LatLng(gps.latitude, gps.longitude);
-
-        String location_context = Context.LOCATION_SERVICE;
-        LocationManager mLocationManager = (LocationManager) context.getSystemService(location_context);
-
-        List<String> providers = mLocationManager.getProviders(true);
-        Location bestLocation = null;
-        for (String provider : providers) {
-            final Location l = mLocationManager.getLastKnownLocation(provider);
-//            int d = Log.d("last known location, provider: %s, location: %s", provider);
-
-            if (l == null) {
-                continue;
-            }
-            if (bestLocation == null
-                    || l.getAccuracy() < bestLocation.getAccuracy()) {
-//                Log.d("found best last known location: %s", String.valueOf(l));
-                bestLocation = l;
-            }
-        }
-        if (bestLocation == null) {
-            return null;
-        }
-
-
-        curlat = bestLocation.getLatitude();
-        curLong = bestLocation.getLongitude();
+//        List<String> providers = mLocationManager.getProviders(true);
+//        Location bestLocation = null;
+//        for (String provider : providers) {
+//            final Location l = mLocationManager.getLastKnownLocation(provider);
+////            int d = Log.d("last known location, provider: %s, location: %s", provider);
+//
+//            if (l == null) {
+//                continue;
+//            }
+//            if (bestLocation == null
+//                    || l.getAccuracy() < bestLocation.getAccuracy()) {
+////                Log.d("found best last known location: %s", String.valueOf(l));
+//                bestLocation = l;
+//            }
+//        }
+//        if (bestLocation == null) {
+//            return null;
+//        }
 
 
 
-        return new LatLng(bestLocation.getLatitude(), bestLocation.getLongitude());
-//        return userLocation;
+
+
+        return latLng;
     }
 
     @Override
@@ -597,7 +569,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         if (response.substring(1,2).equalsIgnoreCase("0")){
                             PD.dismiss();
-                            Helper.toastShort(context, "Something Happened. Please try again later");
+                            Helper.toastShort(activity, "Something Happened. Please try again later");
                         }
                         else{
                             PD.dismiss();
@@ -638,12 +610,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void insertloginlocation(){
         PD.show();
         PD.setMessage("Getting location data...");
+        fusedLocation.connectToApiClient();
 
 
         if (Helper.isIntentKeywordNotNull("fromActivity", passedintent)){
           if (extrass.getString("fromActivity").equalsIgnoreCase("login")) {
               Log.d("EXTRAS", "fromactivity = login");
-
 
               userid = extrass.getInt("userid");
               userlevel = extrass.getInt("userlevel");
@@ -652,11 +624,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
               lastname = extrass.getString("lastname");
               userdescription = extrass.getString("userdescription");
 
-              maps.getMyLocation();
-
-
-
-
               StringRequest postRequest = new StringRequest(Request.Method.POST, Helper.variables.URL_INSERT_LOGINLOCATION,
                       new Response.Listener<String>() {
                           @Override
@@ -664,12 +631,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                               if (response.substring(1, 2).equalsIgnoreCase("0")) {
                                   PD.dismiss();
-                                  Helper.toastShort(context, "Something Happened. Please try again later" + response);
+                                  Helper.toastShort(activity, "Something Happened. Please try again later" + response);
                               } else {
                                   PD.dismiss();
                                   extrass = null;
                                   passedintent=null;
-                                  Helper.toastShort(context, "Location found :) "
+                                  Helper.toastShort(activity, "Location found :) "
 //                                          + "" + " " + userid + " " + curlat + " " + curLong + " "  + response
                                   );
                               }
@@ -687,8 +654,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                   protected Map<String, String> getParams() {
                       Map<String, String> params = new HashMap<String, String>();
                       params.put("userid", userid + "");
-                      params.put("latitude", curlat + "");
-                      params.put("longitude", curLong + "");
+                      params.put("latitude", fusedLocation.getLastKnowLocation().latitude + "");
+                      params.put("longitude", fusedLocation.getLastKnowLocation().longitude+ "");
 //
                       return params;
                   }
@@ -726,20 +693,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onPause() {
         super.onPause();
+        fusedLocation.disconnectFromApiClient();
         Log.d("PROCESS","Onpause");
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("PROCESS", "onDestroy");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("PROCESS", "Start");
-    }
 
 
     //class that handles CustomInfowWindow
@@ -790,9 +747,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fusedLocation.connectToApiClient();
+        Log.d("PROCESS", "REsume");
+
+        if(activeFilter==0){
+            activeFilter = 0;
+        }
+        else{
+
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        final Dialog d = Helper.createCustomDialoYesNO(context, R.layout.dialog_material_yesno, "Do you wish to wish to exit the app? You will have to login next time.", "EXIT", "YES", "NO");
+        final Dialog d = Helper.createCustomDialoYesNO(activity, R.layout.dialog_material_yesno, "Do you wish to wish to exit the app? You will have to login next time.", "EXIT", "YES", "NO");
         d.show();
         Button yes = (Button) d.findViewById(R.id.btn_dialog_yesno_opt1);
         Button no = (Button) d.findViewById(R.id.btn_dialog_yesno_opt2);

@@ -23,6 +23,7 @@ import com.santeh.rjhonsl.samplemap.APIs.MyVolleyAPI;
 import com.santeh.rjhonsl.samplemap.Obj.CustInfoObject;
 import com.santeh.rjhonsl.samplemap.Parsers.AccountsParser;
 import com.santeh.rjhonsl.samplemap.R;
+import com.santeh.rjhonsl.samplemap.Utils.FusedLocation;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class Activity_LoginScreen extends Activity{
     Dialog PD;
 
     List<CustInfoObject> listaccounts = new ArrayList<>();
+    FusedLocation fusedLocation;
 
 
 
@@ -57,6 +59,10 @@ public class Activity_LoginScreen extends Activity{
         setContentView(R.layout.activity_loginscreen);
         activity = this;
         context = Activity_LoginScreen.this;
+
+        fusedLocation = new FusedLocation(context, activity);
+        fusedLocation.buildGoogleApiClient(context);
+
 
         PD =  Helper.initProgressDialog(activity);
         txtprogressdialog_message = (TextView) PD.findViewById(R.id.progress_message);
@@ -160,6 +166,7 @@ public class Activity_LoginScreen extends Activity{
 
     public void login() {
 
+        fusedLocation.connectToApiClient();
         Helper.isLocationAvailable(context, activity);
 
         if(!Helper.isNetworkAvailable(activity)) {
@@ -204,6 +211,8 @@ public class Activity_LoginScreen extends Activity{
                                             intent.putExtra("lastname", listaccounts.get(0).getLastname());
                                             intent.putExtra("userdescription", listaccounts.get(0).getAccountlevelDescription());
                                             intent.putExtra("fromActivity", "login");
+                                            intent.putExtra("lat",fusedLocation.getLastKnowLocation().latitude+"");
+                                            intent.putExtra("long",fusedLocation.getLastKnowLocation().longitude+"");
 
 
                                             startActivity(intent);
@@ -223,7 +232,7 @@ public class Activity_LoginScreen extends Activity{
                     params.put("deviceid", Helper.getMacAddress(activity));
                     params.put("username", txtusername.getText().toString());
                     params.put("password", txtpassword.getText().toString());
-//
+
                     return params;
                 }
             };
@@ -241,5 +250,11 @@ public class Activity_LoginScreen extends Activity{
     protected void onResume() {
         super.onResume();
        Helper.isLocationAvailable(context, activity);
+        fusedLocation.connectToApiClient();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }//end of class

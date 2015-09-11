@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.santeh.rjhonsl.samplemap.APIs.MyVolleyAPI;
 import com.santeh.rjhonsl.samplemap.R;
+import com.santeh.rjhonsl.samplemap.Utils.FusedLocation;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
 import com.santeh.rjhonsl.samplemap.Utils.Logging;
 
@@ -45,6 +46,7 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
     Button insert, btnOK,btnCancel, btnAddPond;
 
     ImageButton titleback;
+    FusedLocation fusedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
         setContentView(R.layout.activity_addmarker);
         context = this;
         activity = this;
+        fusedLocation = new FusedLocation(context, activity);
+        fusedLocation.buildGoogleApiClient(context);
+        fusedLocation.connectToApiClient();
     try{
         curlatitude = (double) getIntent().getExtras().get("latitude");
         curlongtitude = (double) getIntent().getExtras().get("longtitude");
@@ -143,7 +148,7 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
 
                                 Logging.InsertUserActivity(activity, context, Helper.variables.getGlobalVar_currentUserID(activity) + "",
                                         Helper.userActions.TSR.ADD_FARM, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING,
-                                        Helper.getLastKnownLocation(context).latitude+"", Helper.getLastKnownLocation(context).longitude+"");
+                                        fusedLocation.getLastKnowLocation().latitude+"", fusedLocation.getLastKnowLocation().longitude+"");
 
 
                                 PD.dismiss();

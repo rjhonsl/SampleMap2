@@ -25,6 +25,7 @@ import com.santeh.rjhonsl.samplemap.Obj.CustInfoObject;
 import com.santeh.rjhonsl.samplemap.Parsers.PondInfoJsonParser;
 import com.santeh.rjhonsl.samplemap.R;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
+import com.santeh.rjhonsl.samplemap.Utils.Logging;
 
 import java.util.HashMap;
 import java.util.List;
@@ -138,7 +139,7 @@ public class Activity_ManagePonds extends Activity {
                 saveStat=1;
                 btnhandler.editPond();
                 requestType = "update";
-                btnSavePond.setText("  Update");
+                btnSavePond.setText("Update");
                 Helper.toastShort(activity, "You can now edit pond details.");
             }
         });
@@ -421,13 +422,14 @@ public class Activity_ManagePonds extends Activity {
                             String title, prompt;
                             if (responseCode.equalsIgnoreCase("0")){
                                 oopsprompt();
-                            }else if (responseCode.equalsIgnoreCase("1")){
+                            }else if (responseCode.equalsIgnoreCase("1")) {
+
+                                Logging.loguserAction(activity, activity.getBaseContext(), Helper.userActions.TSR.Edit_POND, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING);
                                 title = "SUCCESS";
                                 prompt = "You have successfully updated database.";
                                 PD.dismiss();
-
-
                                 btnhandler.onresume();
+
                                 final Dialog d = Helper.createCustomDialogOKOnly(Activity_ManagePonds.this, title,
                                         prompt, "OK");
                                 TextView ok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
@@ -489,7 +491,7 @@ public class Activity_ManagePonds extends Activity {
                     Map<String, String> params = new HashMap<String, String>();
 
 
-                    http://mysanteh.site50.net/santehweb/updatePondInformationByID.php?
+//                    http://mysanteh.site50.net/santehweb/updatePondInformationByID.php?
                     // specie=tilapia&
                     // pondid=4&
                     // dateStocked=8/17/2015&
