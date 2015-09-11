@@ -92,7 +92,7 @@ public class Activity_ViewCustomerInfo extends Activity {
                 list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int index, long id) {
-                        if(index==0){
+                        if(index==0){//See in map
 
                             Intent intent = new Intent(Activity_ViewCustomerInfo.this, MapsActivity.class);
                             intent.putExtra("lat", searchedList.get(position).getLatitude());
@@ -106,13 +106,19 @@ public class Activity_ViewCustomerInfo extends Activity {
                             startActivity(intent);
 
                         }
-                        else if (index == 1){
+                        else if (index == 1){ //View and Edit details
                             Intent intent = new Intent(Activity_ViewCustomerInfo.this, Activity_CustomerInfo_Edit.class);
                             intent.putExtra("lat", searchedList.get(position).getLatitude());
+                            intent.putExtra("userid", searchedList.get(position).getId());
                             intent.putExtra("long", searchedList.get(position).getLongtitude());
                             intent.putExtra("contactName", searchedList.get(position).getContact_name());
                             intent.putExtra("address", searchedList.get(position).getAddress());
-                            intent.putExtra("id", searchedList.get(position).getId());
+                            intent.putExtra("farmname", searchedList.get(position).getFarmname());
+                            intent.putExtra("farmID", searchedList.get(position).getFarmID());
+                            intent.putExtra("contactnumber", searchedList.get(position).getContact_number());
+                            intent.putExtra("culturesystem", searchedList.get(position).getCultureType());
+                            intent.putExtra("levelofculture", searchedList.get(position).getCulturelevel());
+                            intent.putExtra("watertype", searchedList.get(position).getWaterType());
 
                             intent.putExtra("fromActivity", "viewCustinfo");
                             startActivity(intent);
