@@ -267,7 +267,7 @@ public class Activity_ViewCustomerInfo extends Activity {
                             Helper.toastShort(thisActivity,
                                     "Data has been deleted successfully");
                             PD.setMessage("Refreshing...");
-                            Logging.loguserAction(activity, context, Helper.userActions.TSR.DELETE_FARM, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING);
+                            Logging.loguserAction(activity, context, Helper.userActions.TSR.DELETE_FARM+": index "+id, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING);
                             search();
                         }
                     }, new Response.ErrorListener() {

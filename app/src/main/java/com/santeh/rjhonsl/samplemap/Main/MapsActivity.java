@@ -115,6 +115,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fusedLocation = new FusedLocation(context, activity);
         fusedLocation.buildGoogleApiClient(context);
         fusedLocation.connectToApiClient();
+
         lastlatlng = fusedLocation.getLastKnowLocation();
 
 
@@ -503,6 +504,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private LatLng getLastKnownLocation() {
         fusedLocation.connectToApiClient();
+
         LatLng latLng = fusedLocation.getLastKnowLocation();
 
         curlat = latLng.latitude;
@@ -561,6 +563,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         PD.setMessage("Loading markers....");
         PD.show();
         Log.d("EXTRAS", "before string request");
+        insertloginlocation();
 
         StringRequest request = new StringRequest(Helper.variables.URL_SELECT_ALL_CUSTINFO_LEFTJOIN_PONDINFO,
                 new Response.Listener<String>() {
@@ -574,23 +577,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         else{
                             PD.dismiss();
                             custInfoObjectList = CustAndPondParser.parseFeed(response);
-                            Log.d("EXTRAS", "BEFORE UPDATE RESOPONSE");
-                            if (passedintent != null){
-                                if (passedintent.hasExtra("fromActivity")) {
-                                    Log.d("EXTRAS", "before getextrastring login");
-                                    if (passedintent.getStringExtra("fromActivity").equalsIgnoreCase("login")){
-                                        Log.d("EXTRAS", "show all markers before passed intent was null");
-                                        userid = extrass.getInt("userid");
-                                        userlevel = extrass.getInt("userlevel");
-                                        username = extrass.getString("username");
-                                        firstname = extrass.getString("firstname");
-                                        lastname = extrass.getString("lastname");
-                                        userdescription = extrass.getString("userdescription");
-                                        insertloginlocation();
+                            Log.d("UPDATE DISPLAY", "before condition Request");
+
+                            if ( custInfoObjectList != null) {
+                                Log.d("UPDATE DISPLAY", "not null");
+                                if (custInfoObjectList.size() > 0) {
+                                    Log.d("EXTRAS", "BEFORE UPDATE RESOPONSE");
+                                    if (passedintent != null) {
+                                        if (passedintent.hasExtra("fromActivity")) {
+                                            Log.d("EXTRAS", "before getextrastring login");
+                                            if (passedintent.getStringExtra("fromActivity").equalsIgnoreCase("login")) {
+                                                Log.d("EXTRAS", "show all markers before passed intent was null");
+                                                userid = extrass.getInt("userid");
+                                                userlevel = extrass.getInt("userlevel");
+                                                username = extrass.getString("username");
+                                                firstname = extrass.getString("firstname");
+                                                lastname = extrass.getString("lastname");
+                                                userdescription = extrass.getString("userdescription");
+
+                                                updateDisplay();
+                                            } else {
+                                                updateDisplay();
+                                            }
+                                        } else {
+                                            updateDisplay();
+                                        }
+                                    } else {
                                         updateDisplay();
-                                    }else{updateDisplay();}
-                                }else{updateDisplay();}
+                                    }
+                                } else {
+                                    updateDisplay();
+                                }
                             }else{updateDisplay();}
+
 
                             Log.d("EXTRAS", "BEFORE UPDATE DISPLAY");
                         }
@@ -673,8 +692,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     protected void updateDisplay() {
+        Log.d("UPDATE DISPLAY", "before condition "+ String.valueOf("a"));
 
-        if(!custInfoObjectList.isEmpty() && custInfoObjectList.size()>0){
+
+
+        if(custInfoObjectList != null){
+
+            Log.d("UPDATE DISPLAY", "after condition");
             for (int i = 0; i < custInfoObjectList.size(); i++) {
                 final CustInfoObject ci;
                 ci = custInfoObjectList.get(i);
@@ -685,6 +709,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         R.drawable.ic_beenhere_red_24dp, ci.getFarmname(), ci.getAddress(), ci.getCi_id()+"", ci.getTotalStockOfFarm()+"", ci.getAllSpecie());
 
             }
+        }else {
+            final Dialog d = Helper.createCustomDialogOKOnly(activity, "MAP", "There is no farm data to display", "OK");
+            Button ok = (Button) d.findViewById(R.id.btn_dialog_okonly_OK);
+            d.show();
+
+            ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    d.hide();
+                }
+            });
+
         }
 
     }

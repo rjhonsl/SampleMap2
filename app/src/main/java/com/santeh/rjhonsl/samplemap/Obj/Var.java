@@ -22,7 +22,16 @@ public class Var extends Application {
     private String currentUserName;
     private String currentUserFirstname;
     private String currentUserLastname;
+    private String currentPassword;
 
+
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
 
     private GoogleMap googleMap;
 

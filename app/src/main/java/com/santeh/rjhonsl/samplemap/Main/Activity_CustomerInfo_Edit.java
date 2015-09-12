@@ -37,7 +37,7 @@ public class Activity_CustomerInfo_Edit extends Activity{
 
     EditText edtContactname, edtCompany, edtAddress, edtFarmName, edtFarmId, edtContactNumber, edtCultureSystem, edtLevelOfCulture, edtWaterType;
     private String latitude, longitude;
-    private int userid;
+    private int farmIndexId;
     private String contactName, address, farmname, farmID, contactnumber, culturesystem, levelofculture, watertype;
 
     Button btnSaveChanges;
@@ -52,6 +52,8 @@ public class Activity_CustomerInfo_Edit extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        activity = this;
+        context = Activity_CustomerInfo_Edit.this;
         PD = new ProgressDialog(this);
         PD.setCancelable(false);
 
@@ -81,7 +83,7 @@ public class Activity_CustomerInfo_Edit extends Activity{
         btnSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                updateCustomerInformation();
             }
         });
         edtCultureSystem.setOnClickListener(new View.OnClickListener() {
@@ -228,7 +230,7 @@ public class Activity_CustomerInfo_Edit extends Activity{
             if (intent.hasExtra("lat")){latitude = intent.getStringExtra("lat");}
             if (intent.hasExtra("long")){longitude = intent.getStringExtra("long"); }
 
-            if (intent.hasExtra("userid")){userid = intent.getIntExtra("userid", 0);}
+            if (intent.hasExtra("userid")){farmIndexId = intent.getIntExtra("userid", 0);}
 
             if (intent.hasExtra("contactName")){contactName = intent.getStringExtra("contactName");}
             if (intent.hasExtra("address")){address = intent.getStringExtra("address");}
@@ -246,7 +248,7 @@ public class Activity_CustomerInfo_Edit extends Activity{
 
         latitude = txtlat.getText().toString();
         longitude = txtlong.getText().toString();
-        if (latitude.equalsIgnoreCase("") || longitude.equalsIgnoreCase("") ||
+        if (    latitude.equalsIgnoreCase("") || longitude.equalsIgnoreCase("") ||
                 edtContactname.getText().toString().equalsIgnoreCase("") ||
                 edtCompany.getText().toString().equalsIgnoreCase("") ||
                 edtAddress.getText().toString().equalsIgnoreCase("") ||
@@ -257,43 +259,25 @@ public class Activity_CustomerInfo_Edit extends Activity{
                 edtLevelOfCulture.getText().toString().equalsIgnoreCase("") ||
                 edtWaterType.getText().toString().equalsIgnoreCase(""))
         {
-            Helper.toastShort(activity, );
+            Helper.toastShort(activity,    Helper.variables.URL_DELETE_CUSTINFO_BY_ID);
 
         } else {
             PD.show();
+            PD.setMessage("Saving changes...");
 
-            StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+            StringRequest postRequest = new StringRequest(Request.Method.POST, Helper.variables.URL_UPDATE_CUSTOMERINFORMATION_BY_ID,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
 
                             if (!Helper.extractResponseCodeBySplit(response).equalsIgnoreCase("0")) {
-
-
-                                Logging.InsertUserActivity(activity, context, Helper.variables.getGlobalVar_currentUserID(activity) + "",
-                                        Helper.userActions.TSR.ADD_FARM, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING,
-                                        fusedLocation.getLastKnowLocation().latitude + "", fusedLocation.getLastKnowLocation().longitude + "");
-
-
                                 PD.dismiss();
-                                Dialog d = Helper.createCustomDialogOKOnly(Activity_AddMarker_CustomerInfo.this, "SUCCESS",
-                                        "You have successfully added " + txtContactName.getText().toString() + " to database", "OK");
-                                TextView ok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
-                                d.setCancelable(false);
-                                d.show();
-                                ok.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        finish();
-                                    }
-                                });
-
-
+                                Helper.toastShort(activity, "Update successful.");
+                                Logging.loguserAction(activity, context, Helper.userActions.TSR.Edit_FARM + ": index "+farmIndexId, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING);
                             } else {
+                                PD.dismiss();
                                 Helper.toastShort(activity, getResources().getString(R.string.VolleyUnexpectedError));
                             }
-
-
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -305,18 +289,21 @@ public class Activity_CustomerInfo_Edit extends Activity{
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("latitude", String.valueOf(curlatitude));
-                    params.put("longtitude", String.valueOf(curlongtitude));
-                    params.put("contactName", txtContactName.getText().toString());
-                    params.put("company", txtCompany.getText().toString());
-                    params.put("address", txtAddress.getText().toString());
-                    params.put("farmName", txtFarmname.getText().toString());
-                    params.put("farmID", txtFarmID.getText().toString());
-                    params.put("contactNumber", txtContactNumber.getText().toString());
-                    params.put("cultureType", txtCultureType.getText().toString());
-                    params.put("cultureLevel", txtCultureLevel.getText().toString());
-                    params.put("waterType", txtWaterType.getText().toString());
-                    params.put("dateAdded", Helper.convertLongtoDateString(System.currentTimeMillis()));
+                    params.put("id", farmIndexId+"");
+                    params.put("latitude", String.valueOf(txtlat.getText()));
+                    params.put("longitude", String.valueOf(txtlong.getText()));
+                    params.put("contactName", edtContactname.getText().toString());
+                    params.put("company", edtCompany.getText().toString());
+                    params.put("address", edtAddress.getText().toString());
+                    params.put("farmName", edtFarmName.getText().toString());
+                    params.put("farmID", edtFarmId.getText().toString());
+                    params.put("contactNumber", edtContactNumber.getText().toString());
+                    params.put("cultureType", edtCultureSystem.getText().toString());
+                    params.put("cultureLevel", edtLevelOfCulture.getText().toString());
+                    params.put("waterType", edtWaterType.getText().toString());
+                    params.put("username", Helper.variables.getGlobalVar_currentUsername(activity));
+                    params.put("password", Helper.variables.getGlobalVar_currentUserpassword(activity));
+                    params.put("deviceid", Helper.getMacAddress(activity));
 
                     return params;
                 }
@@ -324,7 +311,7 @@ public class Activity_CustomerInfo_Edit extends Activity{
 
             // Adding request to request queue
             MyVolleyAPI api = new MyVolleyAPI();
-            api.addToReqQueue(postRequest, Activity_AddMarker_CustomerInfo.this);
+            api.addToReqQueue(postRequest, Activity_CustomerInfo_Edit.this);
         }
 
 

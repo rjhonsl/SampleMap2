@@ -3,6 +3,7 @@ package com.santeh.rjhonsl.samplemap.Main;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -36,8 +37,10 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
     EditText txtContactName, txtCultureType, txtCultureLevel, txtWaterType, txtCompany, txtAddress, txtFarmname,txtFarmID,txtContactNumber;
     TextView txtLat, txtLong;
     double curlatitude=0, curlongtitude=0;
-    Activity context;
+    Activity context1;
     Activity activity;
+
+    Context context;
 
     String url = "http://mysanteh.site50.net/santehweb/insertCustomerInformation.php";
     String latitude, longtitude, id, imageName;
@@ -52,7 +55,8 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addmarker);
-        context = this;
+        context1 = this;
+        context = Activity_AddMarker_CustomerInfo.this;
         activity = this;
         fusedLocation = new FusedLocation(context, activity);
         fusedLocation.buildGoogleApiClient(context);
@@ -62,7 +66,7 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
         curlongtitude = (double) getIntent().getExtras().get("longtitude");
 
     }catch (Exception e){
-        Helper.toastShort(context, "No location passed");
+        Helper.toastShort(context1, "No location passed");
     }
 
 
@@ -108,6 +112,7 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
 
 
     public void insertCustomerInfo() {
+        fusedLocation.connectToApiClient();
 
         latitude = String.valueOf(curlatitude);
         longtitude = String.valueOf(curlongtitude);
@@ -143,12 +148,13 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
                         @Override
                         public void onResponse(String response) {
 
+                            fusedLocation.connectToApiClient();
                             if (!Helper.extractResponseCodeBySplit(response).equalsIgnoreCase("0")) {
 
-
-                                Logging.InsertUserActivity(activity, context, Helper.variables.getGlobalVar_currentUserID(activity) + "",
-                                        Helper.userActions.TSR.ADD_FARM, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING,
-                                        fusedLocation.getLastKnowLocation().latitude+"", fusedLocation.getLastKnowLocation().longitude+"");
+//                                Log.d("LOGGING", "" + activity.toString() + " " + context.toString() + " " + Helper.variables.getGlobalVar_currentUserID(activity) + ""
+//                                        + " " + fusedLocation.getLastKnowLocation().latitude + " " + fusedLocation.getLastKnowLocation().longitude);
+                                Logging.loguserAction(activity, context,
+                                        Helper.userActions.TSR.ADD_FARM, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING);
 
 
                                 PD.dismiss();
@@ -167,6 +173,7 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
 
                             }else {
                                 Helper.toastShort(activity, getResources().getString(R.string.VolleyUnexpectedError));
+                                PD.dismiss();
                             }
 
 
@@ -193,6 +200,11 @@ public class Activity_AddMarker_CustomerInfo extends Activity {
                     params.put("cultureLevel", txtCultureLevel.getText().toString());
                     params.put("waterType",   txtWaterType.getText().toString());
                     params.put("dateAdded", Helper.convertLongtoDateString(System.currentTimeMillis()));
+                    params.put("username", Helper.variables.getGlobalVar_currentUsername(activity));
+                    params.put("userid", Helper.variables.getGlobalVar_currentUserID(activity)+"");
+                    params.put("password", Helper.variables.getGlobalVar_currentUserpassword(activity));
+                    params.put("deviceid", Helper.getMacAddress(activity));
+
 
                     return params;
                 }

@@ -96,6 +96,7 @@ public class Helper {
         public static String URL_INSERT_USER_ACTIVITY   = "http://mysanteh.site50.net/santehweb/insertUserActivity.php";
 
         public static String URL_UPDATE_PONDINFO_BY_ID  ="http://mysanteh.site50.net/santehweb/updatePondInformationByID.php";
+        public static String URL_UPDATE_CUSTOMERINFORMATION_BY_ID  ="http://mysanteh.site50.net/santehweb/updateCustomerInformationByID.php";
 
         public static String URL_LOGIN  ="http://mysanteh.site50.net/santehweb/login.php";
 
@@ -234,6 +235,15 @@ public class Helper {
 
         public static void setGlobalVar_currentLastname(String lastname, Activity activity ){
             ((Var) activity.getApplication()).setCurrentUserLastname(lastname);
+        }
+
+
+        public static String getGlobalVar_currentUserpassword( Activity activity ){
+            return  ((Var) activity.getApplication()).getCurrentPassword();
+        }
+
+        public static void setGlobalVar_currentUserpassword(String password, Activity activity ){
+            ((Var) activity.getApplication()).setCurrentPassword(password);
         }
 
 
@@ -497,7 +507,7 @@ public class Helper {
         d.setContentView(R.layout.dialog_material_okonly);//Set the xml view of the dialog
         TextView txttitle = (TextView) d.findViewById(R.id.dialog_okonly_title);
         TextView txtprompt = (TextView) d.findViewById(R.id.dialog_okonly_prompt);
-        TextView txtok = (TextView) d.findViewById(R.id.btn_dialog_okonly_OK);
+        Button txtok = (Button) d.findViewById(R.id.btn_dialog_okonly_OK);
         txtprompt.setText(prompt);
         txttitle.setText(title);
         txtok.setText(button);
