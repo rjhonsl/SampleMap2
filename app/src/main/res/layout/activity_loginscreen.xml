@@ -126,7 +126,7 @@
                 <CheckBox android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:id="@+id/chk_loginscreen_showpassword"
-                          android:button="@drawable/bg_material_checkbox"
+                          android:button="@drawable/bg_material_checkbox_yellow"
                           />
 
                 <TextView android:layout_width="wrap_content"

@@ -30,24 +30,17 @@ public class CustInfoObject {
 	private String accountlevelDescription;
 	private int userlevel;
 	private int userid;
-
-
-
-
 	private int pondID;
 	private int area;
 	private int quantity;
 	private int sizeofStock;
-
-
 	private int totalStockOfFarm;
     private int pondIndex;
-
-
 	private int currentweekofStock;
 	private int startweekofStock;
 	private int week;
 
+	private int isVisited;
 
 	private String customerID;
 	private String specie;
@@ -64,7 +57,8 @@ public class CustInfoObject {
 	private double weeklyConsumptionInGrams;
 	private String survivalrate_per_pond;
 
-
+	public CustInfoObject() {
+	}
 
 
 	public String getSurvivalrate_per_pond() {
@@ -75,7 +69,13 @@ public class CustInfoObject {
 		this.survivalrate_per_pond = survivalrate_per_pond;
 	}
 
+	public int getIsVisited() {
+		return isVisited;
+	}
 
+	public void setIsVisited(int isVisited) {
+		this.isVisited = isVisited;
+	}
 
 	public int getUserlevel() {
 		return userlevel;

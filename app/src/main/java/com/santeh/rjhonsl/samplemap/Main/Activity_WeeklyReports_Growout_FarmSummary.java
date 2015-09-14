@@ -140,6 +140,7 @@ public class Activity_WeeklyReports_Growout_FarmSummary extends Activity {
             obj.setCurrentfeedType(Helper.getFeedTypeByNumberOfWeeks(i + 1));
             obj.setCurrentweekofStock(i + 1);
             obj.setWeek(currentweek);
+            obj.setIsVisited(0);
             obj.setRemarks("N/A");
             double abw = Helper.get_ABW_BY_WEEK_NO(i + 1), quantity1 = quantity , survivalrate = 0.7, feedingrate = Helper.get_FeedingRate_by_WeekNum(i+1);
             double recommended = (abw * quantity1 * survivalrate * feedingrate * 7) / 1000;

@@ -2,4 +2,6 @@
 <resources>
     <color name="actionbarBackground">#42A5F5</color>
     <color name="yellow">#f5e042</color>
+    <color name="gray">#bfbfbf</color>
+
 </resources>

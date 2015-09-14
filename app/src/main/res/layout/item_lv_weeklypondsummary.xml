@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:padding="9dp"
-              android:id="@+id/ll_"
+              android:id="@+id/ll_item_weekLyReportWrapper"
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content">
@@ -107,7 +107,7 @@
 
 
         <CheckBox android:layout_width="wrap_content"
-                  android:button="@drawable/bg_material_checkbox"
+                  android:button="@drawable/bg_material_checkbox_darkteal"
                   android:id="@+id/chk_weeklyreport_pondsummary_isVisited"
                   android:focusable="false"
                   android:focusableInTouchMode="false"

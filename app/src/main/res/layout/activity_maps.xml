@@ -131,7 +131,7 @@
                     android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:text="      All Markers"
+                    android:text="      Stockings"
                     android:textSize="16sp"
                     android:drawableLeft="@drawable/ic_place_grey_24dp"
                     android:id="@+id/txt_Nav_displayAll"
@@ -140,7 +140,7 @@
                     android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:text="      Fingerlings"
+                    android:text="      Fingerlings &amp; Hatchery"
                     android:id="@+id/txt_Nav_fingerlings"
                     android:drawableLeft="@drawable/ic_place_green_24dp"
                     android:textSize="16sp"
@@ -148,8 +148,10 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"/>
 
+
                 <TextView
                     android:text="      Stockings"
+                    android:visibility="gone"
                     android:textSize="16sp"
                     android:drawableLeft="@drawable/ic_place_yellow_24dp"
                     android:id="@+id/txt_Nav_stockings"
@@ -160,6 +162,7 @@
                 <TextView
                     android:text="      Sperms"
                     android:textSize="16sp"
+                    android:visibility="gone"
                     android:id="@+id/txt_Nav_sperms"
                     android:drawableLeft="@drawable/ic_place_blue_24dp"
                     android:padding="13dp"
@@ -190,7 +193,7 @@
                     android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:text="      Grow Outs"
+                    android:text="      Grow Out Reports"
                     android:textSize="16sp"
                     android:id="@+id/txt_Nav_growOut"
                     android:padding="13dp"
@@ -199,11 +202,11 @@
                     android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:text="      Hatchery"
+                    android:text="      Hatchery Reports"
                     android:textSize="16sp"
                     android:id="@+id/txt_Nav_hatchery"
                     android:padding="13dp"
-                    android:drawableLeft="@drawable/ic_settings_blue_24dp"
+                    android:drawableLeft="@drawable/ic_egg_darkteal_24dp"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"/>
 

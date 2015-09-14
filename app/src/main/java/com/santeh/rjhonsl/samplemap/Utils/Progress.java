@@ -50,6 +50,23 @@ public class Progress {
          * -if there was multiple specie per pond
          * -Same Pond with more than one specie (it was rare but happening)
          *
+         * ##UI UPDATES
+         * -MapsActivity
+         * -Weekly Pond Report
+         *
+         *
+         * ##table for Weekly Reports
+         * -tble for checkboxes
+         *
          *
          **/
+
+    /**
+    *
+    * ****PROGRESS
+     * Maps Activity
+     * -remove some rows
+     * -change an icon(hatchery reports)
+    *
+    * */
 }

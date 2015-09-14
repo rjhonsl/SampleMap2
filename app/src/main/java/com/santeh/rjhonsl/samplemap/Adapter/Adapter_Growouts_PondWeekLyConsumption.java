@@ -1,6 +1,7 @@
 package com.santeh.rjhonsl.samplemap.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class Adapter_Growouts_PondWeekLyConsumption extends ArrayAdapter<CustInf
 	String tag = "CreateNew ArrayAdapter";
 	private SparseBooleanArray mSelectedItemsIds;
 	ArrayList<Boolean> positionArray;
+	boolean[] checked;
 	int[] visiblePosArray;
 	private volatile int positionCheck;
 
@@ -38,18 +40,17 @@ public class Adapter_Growouts_PondWeekLyConsumption extends ArrayAdapter<CustInf
 		mSelectedItemsIds = new SparseBooleanArray();
 		this.context = context;
 		this.objArrayList = items;
+		visiblePosArray = new int[objArrayList.size()];
+		checked = new boolean[objArrayList.size()];
 		inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		positionArray = new ArrayList<Boolean>(objArrayList.size());
-		for(int i = 0 ; i<objArrayList.size() ; i++){
-			positionArray.add(false);
-		}
 	}
 
 	private class ViewHolder {
 		TextView txtweekno, txtfeedtype, txtactual, txtrecommended, txtremarks;
 		CheckBox chkisVisited;
-		LinearLayout weeknoHOlder;
+		LinearLayout weeknoHOlder, wrapper;
 	}
 
 	public View getView(final int position, View view, ViewGroup parent) {
@@ -69,8 +70,9 @@ public class Adapter_Growouts_PondWeekLyConsumption extends ArrayAdapter<CustInf
 			holder.txtrecommended = (TextView) view.findViewById(R.id.itemlv_weeklyreport_pondsummary_recommended);
 			holder.txtremarks = (TextView) view.findViewById(R.id.itemlv_weeklyreport_pondsummary_remarks);
 
-			holder.chkisVisited = (CheckBox) view.findViewById(R.id.chk_weeklyreport_pondsummary_isVisited);
+			holder.wrapper = (LinearLayout) view.findViewById(R.id.ll_item_weekLyReportWrapper);
 
+			holder.chkisVisited = (CheckBox) view.findViewById(R.id.chk_weeklyreport_pondsummary_isVisited);
 
 			holder.weeknoHOlder = (LinearLayout) view.findViewById(R.id.weeknoHOlder);
 
@@ -85,19 +87,54 @@ public class Adapter_Growouts_PondWeekLyConsumption extends ArrayAdapter<CustInf
 
 		}
 
-//		 Capture position and set to the TextViews
+		visiblePosArray[position] = objArrayList.get(position).getIsVisited();
+
+		if(objArrayList.get(position).getIsVisited() == 0){
+			holder.chkisVisited.setChecked(false);
+		}else{
+			holder.chkisVisited.setChecked(true);
+		}
+
+
+		holder.chkisVisited.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				//					holder.chkisVisited.setChecked(false);
+//					holder.chkisVisited.setChecked(true);
+				checked[position] = isChecked;
+			}
+		});
+
+		holder.chkisVisited.setChecked(checked[position]);
+
+
 		holder.txtweekno.setText("" + objArrayList.get(position).getCurrentweekofStock());
 		holder.txtfeedtype.setText("Feed Type: "+objArrayList.get(position).getCurrentfeedType());
 		holder.txtremarks.setText("Remarks: "+objArrayList.get(position).getRemarks());
 
-		if ((position+1) == objArrayList.get(position).getStartweekofStock() ){
-			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_lightred_box_curvebottom));}
+
+
+		if ((position + 1) == objArrayList.get(position).getStartweekofStock() ){
+			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_lightred_box_curvebottom));
+
+		}
 		else if((position+1) == objArrayList.get(position).getWeek() ){
 			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_blue_box_curvebottom));
 		}
 		else{
 			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_darkteal_box_curvebottom));
 		}
+
+		if (position + 1 < objArrayList.get(position).getWeek()) {
+			holder.wrapper.setBackgroundColor(Color.parseColor("#bfbfbf"));
+			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_darkgray_box_curvebottom));
+			holder.txtrecommended.setTextColor(Color.parseColor("#000000"));
+		}else{
+
+		}
+
+
+
 
 		if (Double.parseDouble(objArrayList.get(position).getRecommendedConsumption()) > 0){
 			holder.txtrecommended.setText("Recommended: "+ (objArrayList.get(position).getRecommendedConsumption())+"kg");
@@ -110,22 +147,6 @@ public class Adapter_Growouts_PondWeekLyConsumption extends ArrayAdapter<CustInf
 		}else{
 			holder.txtactual.setText("Actual: " +objArrayList.get(position).getActualConsumption ()+ "kg");
 		}
-
-
-
-		holder.chkisVisited.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				if(isChecked ){
-					positionArray.set(position, true);
-
-				}else
-					positionArray.set(position, false);
-			}
-		});
-
-
 
 
 //		holder.txtactual.setText("Weekly Consumption: "+(df.format(objArrayList.get(position).getWeeklyConsumptionInGrams() / 1000))+" kg");
