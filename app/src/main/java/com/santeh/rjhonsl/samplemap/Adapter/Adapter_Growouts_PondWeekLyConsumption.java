@@ -32,7 +32,6 @@ public class Adapter_Growouts_PondWeekLyConsumption extends ArrayAdapter<CustInf
 	int[] visiblePosArray;
 	private volatile int positionCheck;
 
-//	android:id="@+id/itemlv_feedconsSummary_farmname"
 
 	public Adapter_Growouts_PondWeekLyConsumption(Context context, int resourceId, List<CustInfoObject> items) {
 		super(context, resourceId, items);
@@ -92,12 +91,12 @@ public class Adapter_Growouts_PondWeekLyConsumption extends ArrayAdapter<CustInf
 		holder.txtremarks.setText("Remarks: "+objArrayList.get(position).getRemarks());
 
 		if ((position+1) == objArrayList.get(position).getStartweekofStock() ){
-			holder.txtweekno.setBackground(context.getResources().getDrawable(R.drawable.bg_lightred_box_curvebottom));}
+			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_lightred_box_curvebottom));}
 		else if((position+1) == objArrayList.get(position).getWeek() ){
-			holder.txtweekno.setBackground(context.getResources().getDrawable(R.drawable.bg_blue_box_curvebottom));
+			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_blue_box_curvebottom));
 		}
 		else{
-			holder.txtweekno.setBackground(context.getResources().getDrawable(R.drawable.bg_darkteal_box_curvebottom));
+			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_darkteal_box_curvebottom));
 		}
 
 		if (Double.parseDouble(objArrayList.get(position).getRecommendedConsumption()) > 0){

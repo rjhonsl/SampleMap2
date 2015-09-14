@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class Activity_ManagePonds extends Activity {
 
-    EditText txtpondId, txtSpecie, txtDateofStocking, txtQuantity, txtculturetype, txtarea, txtRemarks, txtsizeOfStock;
+    EditText txtpondId, txtSpecie, txtDateofStocking, txtQuantity, txtculturetype, txtarea, txtRemarks, txtsizeOfStock, txtsurvivalRate;
     TextView txttotalPonds, txtTotalQty;
     Button btnSavePond, btnCancel, btnAddPond, btnEditPond, btnDeletePond;
 
@@ -85,6 +85,7 @@ public class Activity_ManagePonds extends Activity {
         txtarea             = (EditText) findViewById(R.id.txt_pondDetails_area);
         txtRemarks          = (EditText) findViewById(R.id.txt_pondDetails_remarks);
         txtsizeOfStock      = (EditText) findViewById(R.id.txt_pondDetails_SizeofStock);
+        txtsurvivalRate     = (EditText) findViewById(R.id.txt_pondDetails_survivalrate);
 
         txttotalPonds       = (TextView) findViewById(R.id.txt_pondDetails_totalPonds);
         txtTotalQty         = (TextView) findViewById(R.id.txt_pondDetails_totalQuantity);
@@ -108,7 +109,7 @@ public class Activity_ManagePonds extends Activity {
             @Override
             public void onClick(View v) {
                 requestType = "delete";
-                final Dialog d =Helper.createCustomDialoYesNO(activity, R.layout.dialog_material_yesno, "Are you sure you want to delete this data?", "DELETE"
+                final Dialog d =Helper.createCustomDialoYesNO(activity, R.layout.dialog_material_yesno, "Are you sure you want to delete this record?", "DELETE"
                         , "YES", "NO");
 
                 Button yes = (Button) d.findViewById(R.id.btn_dialog_yesno_opt1);
@@ -169,6 +170,7 @@ public class Activity_ManagePonds extends Activity {
                             txtculturetype.setText("" + pondInfoList.get(position).getCulturesystem());
                             txtarea.setText("" + pondInfoList.get(position).getArea());
                             txtRemarks.setText("" + pondInfoList.get(position).getRemarks());
+                            txtsurvivalRate.setText(""+pondInfoList.get(position).getSurvivalrate_per_pond());
                             d.hide();
                         }
                     });
@@ -358,8 +360,9 @@ public class Activity_ManagePonds extends Activity {
     }
 
     private void fillEditTextWithData() {
-        if(pondInfoList.size()>0){
+        if(pondInfoList != null){
             txtpondId.setText(""+pondInfoList.get(0).getPondID());
+            txtsurvivalRate.setText(""+pondInfoList.get(0).getSurvivalrate_per_pond());
             txtsizeOfStock.setText(""+pondInfoList.get(0).getSizeofStock());
             txtDateofStocking.setText(""+pondInfoList.get(0).getDateStocked());
             txtSpecie.setText(""+pondInfoList.get(0).getSpecie());
@@ -376,6 +379,7 @@ public class Activity_ManagePonds extends Activity {
 
     private void clearEditexts() {
         txtDateofStocking.setText("");
+        txtsurvivalRate.setText("");
         txtsizeOfStock.setText("");
         txtSpecie.setText("");
         txtQuantity.setText("");
@@ -386,7 +390,7 @@ public class Activity_ManagePonds extends Activity {
     }
 
 
-    public void updateCustomerInfoDB(final int customerID, String url) {
+    public void updateCustomerInfoDB(final int customerID, final String url) {
 
         if(     txtSpecie.getText().toString().equalsIgnoreCase("") ||
                 txtDateofStocking.getText().toString().equalsIgnoreCase("") ||
@@ -395,7 +399,8 @@ public class Activity_ManagePonds extends Activity {
                 txtculturetype.getText().toString().equalsIgnoreCase("") ||
                 txtarea.getText().toString().equalsIgnoreCase("") ||
                 txtRemarks.getText().toString().equalsIgnoreCase("")||
-                txtpondId.getText().toString().equalsIgnoreCase("")
+                txtpondId.getText().toString().equalsIgnoreCase("")||
+                txtsurvivalRate.getText().toString().equalsIgnoreCase("")
                 )
         {
             final Dialog d = Helper.createCustomDialogOKOnly(Activity_ManagePonds.this, "OOPS",
@@ -420,6 +425,8 @@ public class Activity_ManagePonds extends Activity {
 
                             String responseCode = Helper.extractResponseCode(response);
                             String title, prompt;
+
+
                             if (responseCode.equalsIgnoreCase("0")){
                                 oopsprompt();
                             }else if (responseCode.equalsIgnoreCase("1")) {
@@ -491,28 +498,17 @@ public class Activity_ManagePonds extends Activity {
                     Map<String, String> params = new HashMap<String, String>();
 
 
-//                    http://mysanteh.site50.net/santehweb/updatePondInformationByID.php?
-                    // specie=tilapia&
-                    // pondid=4&
-                    // dateStocked=8/17/2015&
-                    // quantity=1000&
-                    // area=200&
-                    // culturesystem=Cage&
-                    // id=20&
-                    // customerId=42&
-                    // remarks=Remarks%20%haBeem
-
-                    params.put("pondid", String.valueOf(txtpondId.getText()));
-                    params.put("sizeofStock", String.valueOf(txtsizeOfStock.getText()));
                     params.put("specie", String.valueOf(txtSpecie.getText()));
+                    params.put("pondid", String.valueOf(txtpondId.getText()));
                     params.put("dateStocked", String.valueOf(txtDateofStocking.getText()));
                     params.put("quantity", String.valueOf(txtQuantity.getText()));
                     params.put("area", String.valueOf(txtarea.getText()));
                     params.put("culturesystem", String.valueOf(txtculturetype.getText()));
                     params.put("remarks", String.valueOf(txtRemarks.getText()));
-                    params.put("customerId", String.valueOf(customerID));
                     params.put("id", String.valueOf(indexID));
-
+                    params.put("customerId", String.valueOf(customerID));
+                    params.put("sizeofStock", String.valueOf(txtsizeOfStock.getText()));
+                    params.put("survivalrate", String.valueOf(txtsurvivalRate.getText()));
 
                     return params;
                 }
@@ -552,13 +548,16 @@ public class Activity_ManagePonds extends Activity {
                                         highestPondID = pondInfoList.get(i).getPondID();
                                     }
 
+
                                     totalponds = pondInfoList.size();
                                     totalstock = totalstock + pondInfoList.get(i).getQuantity();
                                     Log.d("POND ID",""+pondInfoList.get(i).getPondID());
 
                                 }
 
-                            txtpondId.setText(""+pondInfoList.get(0).getPondID());
+                                btnhandler.onresume();
+                                indexID = pondInfoList.get(0).getId();
+                                txtpondId.setText(""+pondInfoList.get(0).getPondID());
                             txtTotalQty.setText("" + totalstock);
                             txttotalPonds.setText("" + totalponds);
                                 fillEditTextWithData();
@@ -610,6 +609,7 @@ public class Activity_ManagePonds extends Activity {
             ll.setEnabled(false);
 
             txtSpecie.setEnabled(false);
+            txtsurvivalRate.setEnabled(false);
             txtsizeOfStock.setEnabled(false);
             txtculturetype.setEnabled(false);
             txtDateofStocking.setEnabled(false);
@@ -626,6 +626,7 @@ public class Activity_ManagePonds extends Activity {
             ll.setEnabled(true);
 
             txtSpecie.setEnabled(true);
+            txtsurvivalRate.setEnabled(true);
             txtsizeOfStock.setEnabled(true);
             txtculturetype.setEnabled(true);
             txtDateofStocking.setEnabled(true);
@@ -640,8 +641,15 @@ public class Activity_ManagePonds extends Activity {
             btnAddPond.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_circle_outline_darkteal_24dp, 0, 0, 0);
             btnAddPond.setText("  New");
 
-            btnEditPond.setEnabled(true);
-            btnDeletePond.setEnabled(true);
+            if (pondInfoList != null){
+                btnEditPond.setEnabled(true);
+                btnDeletePond.setEnabled(true);
+            }else{
+                btnEditPond.setEnabled(false);
+                btnDeletePond.setEnabled(false);
+            }
+
+
 
             disableEditexts();
         }

@@ -62,6 +62,19 @@ public class CustInfoObject {
 	private String actualConsumption;
 
 	private double weeklyConsumptionInGrams;
+	private String survivalrate_per_pond;
+
+
+
+
+	public String getSurvivalrate_per_pond() {
+		return survivalrate_per_pond;
+	}
+
+	public void setSurvivalrate_per_pond(String survivalrate_per_pond) {
+		this.survivalrate_per_pond = survivalrate_per_pond;
+	}
+
 
 
 	public int getUserlevel() {

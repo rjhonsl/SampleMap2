@@ -713,6 +713,7 @@ public class Helper {
 
 
     public static boolean isIntentKeywordNotNull(String keyword, Intent extras){
+        if (extras != null){
             if (extras.hasExtra(keyword)) {
                 Log.d("EXTRAS", "true");
                 return true;
@@ -720,6 +721,10 @@ public class Helper {
                 Log.d("EXTRAS", "false");
                 return false;
             }
+        }else {
+            return false;
+        }
+
     }
 
     public static String extractResponseCodeBySplit(String response) {

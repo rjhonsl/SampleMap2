@@ -72,7 +72,7 @@ public class Adapter_Growouts_AllFarmDemands extends ArrayAdapter<CustInfoObject
 		holder.txtcurrentWeekAndFeedtype.setText("Week "+objArrayList.get(position).getCurrentweekofStock() + " - " +objArrayList.get(position).getCurrentfeedType());
 		holder.txtspecie.setText(objArrayList.get(position).getSpecie() + " - " + objArrayList.get(position).getQuantity() + "(qty)");
 		DecimalFormat df = new DecimalFormat("#.##");
-		holder.txtconsumption.setText("Weekly Consumption: "+(df.format(objArrayList.get(position).getWeeklyConsumptionInGrams() / 1000))+" kg");
+		holder.txtconsumption.setText("Consumption: "+(df.format(objArrayList.get(position).getWeeklyConsumptionInGrams() / 1000))+" kg");
 
 
 		return view;

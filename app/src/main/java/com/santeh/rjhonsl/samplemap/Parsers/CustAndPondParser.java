@@ -259,22 +259,11 @@ public class CustAndPondParser {
 				}
 
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+				if (obj.has("survivalrate")){
+					custInfoObject.setSurvivalrate_per_pond(obj.getString("survivalrate"));
+				}
+
+
 //
 //
 
@@ -301,7 +290,8 @@ public class CustAndPondParser {
 						"datestocked: "+custInfoObject.getDateStocked()+
 						"culture system: "+custInfoObject.getCulturesystem()+
 						"remarks: "+custInfoObject.getRemarks()+
-						"custoemrId: "+custInfoObject.getCustomerID()
+						"custoemrId: "+custInfoObject.getCustomerID()+
+						"survivalRate: " + custInfoObject.getSurvivalrate_per_pond()
 				);
 				custInfoObjectList.add(custInfoObject);
 
