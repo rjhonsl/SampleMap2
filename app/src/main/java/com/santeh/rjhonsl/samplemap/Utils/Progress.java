@@ -83,7 +83,12 @@ public class Progress {
      * -added tablse (tblarea_municipality)
      *
      * Apptitle
-     * -changed to
+     * -changed to Santeh CRM
+     *
+     * ##9-15-18
+     * -queries for manager in mapsActivity
+     * -queries for supervisor in mapsActivity
+     * -queries for TSR in mapsActivity
      *
      *
      * */

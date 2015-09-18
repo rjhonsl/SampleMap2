@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.ui.IconGenerator;
 import com.santeh.rjhonsl.samplemap.APIs.MyVolleyAPI;
 import com.santeh.rjhonsl.samplemap.Obj.CustInfoObject;
 import com.santeh.rjhonsl.samplemap.Obj.Var;
@@ -420,6 +422,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    private Bitmap iconGeneratorSample(Context context) {
+
+        IconGenerator iconGenerator = new IconGenerator(context);
+
+        Bitmap bitmap = iconGenerator.makeIcon("Sample");
+
+        return null;
+    }
+
     private boolean checkIfLocationAvailable() {
         GPSTracker gpstracker = new GPSTracker(this);
         return gpstracker.getIsGPSTrackingEnabled();
@@ -528,11 +539,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        if (bestLocation == null) {
 //            return null;
 //        }
-
-
-
-
-
         return latLng;
     }
 
@@ -562,7 +568,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onResponse(final String response) {
 
-                   //     Helper.toastLong(activity, response);
+///                        Helper.toastLong(activity, response);
 
                         if (response.substring(1, 2).equalsIgnoreCase("0")) {
                             PD.dismiss();
@@ -709,11 +715,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (int i = 0; i < custInfoObjectList.size(); i++) {
                 final CustInfoObject ci;
                 ci = custInfoObjectList.get(i);
-
                 Log.d("JSON PARSE", "" + ci.getFarmID() +" " +ci.getFarmname());
                 LatLng custLatlng = new LatLng(Double.parseDouble(ci.getLatitude()), Double.parseDouble(ci.getLongtitude()));
                 Marker marker = Helper.map_addMarker(maps, custLatlng,
-                        R.drawable.ic_beenhere_red_24dp, ci.getFarmname(), ci.getAddress(), ci.getCi_id()+"", ci.getTotalStockOfFarm()+"", ci.getAllSpecie());
+                        R.drawable.ic_place_red_24dp, ci.getFarmname(), ci.getAddress(), ci.getCi_id()+"", ci.getTotalStockOfFarm()+"", ci.getAllSpecie());
 
             }
         }else {

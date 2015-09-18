@@ -29,4 +29,5 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.5.0'
     compile files('libs/volley.jar')
     compile files('libs/joda-time-2.8.2.jar')
+    compile 'com.google.maps.android:android-maps-utils:0.4+'
 }
