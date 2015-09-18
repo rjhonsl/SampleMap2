@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">GPS Monitoring</string>
-    <string name="title_activity_maps">GPS Montoring</string>
+    <string name="app_name">Santeh CRM</string>
+    <string name="title_activity_maps">Santeh CRM</string>
     <string name="openDrawer">Navigation Drawer Opened</string>
     <string name="closeDrawer">Navigation Drawer Closed</string>
     <string name="NA">N/A</string>
+    <string name="version_number">0.18a</string>
     <string name="VolleyUnexpectedError">Something went wrong. Please try again later.</string>
     <string name="error002">Cannot get device location</string>
 

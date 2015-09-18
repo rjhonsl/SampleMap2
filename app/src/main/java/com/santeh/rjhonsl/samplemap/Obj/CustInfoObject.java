@@ -22,6 +22,8 @@ public class CustInfoObject {
 	private String dateAddedToDB;
 	private Bitmap bitmap;
 
+	private String assingedArea;
+
 
 	private String username;
 	private String firstname;
@@ -58,6 +60,16 @@ public class CustInfoObject {
 	private String survivalrate_per_pond;
 
 	public CustInfoObject() {
+	}
+
+
+
+	public String getAssingedArea() {
+		return assingedArea;
+	}
+
+	public void setAssingedArea(String assingedArea) {
+		this.assingedArea = assingedArea;
 	}
 
 

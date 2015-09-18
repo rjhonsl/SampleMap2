@@ -25,11 +25,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -183,17 +181,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                     
                 }else{
-                    showAllMarker();
+                    showAllRelatedMarkers();
                 }
 
             }
             else {
-                    showAllMarker();
+                    showAllRelatedMarkers();
             }
 
         }
         else{
-            showAllMarker();
+            showAllRelatedMarkers();
         }
     }
 
@@ -255,7 +253,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 mapClear(map);
-                showAllMarker();
+                showAllRelatedMarkers();
                 closeDrawer();
             }
         });
@@ -291,8 +289,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                setUpMap();
                 LatLng latlng = getLastKnownLocation();
 
-                if(checkIfLocationAvailable() || latlng != null){
-                    try{
+                if (checkIfLocationAvailable() || latlng != null) {
+                    try {
                         //getLastKnownLocation();
                         final Intent intent = new Intent(MapsActivity.this, Activity_AddMarker_CustomerInfo.class);
                         intent.putExtra("latitude", latlng.latitude);
@@ -330,11 +328,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             }
                         }, 1200);
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         dialogLocationNotAvailableOkOnly();
                     }
-                }
-                else {
+                } else {
                     dialogLocationNotAvailableOkOnly();
                 }
 
@@ -357,19 +354,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onInfoWindowClick(Marker marker) {
 
                 String ID = marker.getId(), curId = "";
-                for (int i = 0; i < marker.getTitle().length() ; i++) {
-                   char c = marker.getTitle().charAt(i);
-                    if (c=='-'){
+                for (int i = 0; i < marker.getTitle().length(); i++) {
+                    char c = marker.getTitle().charAt(i);
+                    if (c == '-') {
                         break;
                     }
-                    curId = curId+c;
+                    curId = curId + c;
                 }
 
                 String[] details = marker.getTitle().split("-");
 
                 Intent intent = new Intent(MapsActivity.this, Activity_FarmViewOptions.class);
-                intent.putExtra("customerID","" + curId.trim());
-                intent.putExtra("farmname","" + details[1]);
+                intent.putExtra("customerID", "" + curId.trim());
+                intent.putExtra("farmname", "" + details[1]);
                 startActivity(intent);
 
 //                Dialog d = Helper.createCustomDialog(MapsActivity.this, R.layout.dialogbottomofmap);
@@ -558,45 +555,43 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    public void showAllRelatedMarkers(){
 
-    private void showAllMarker() {
-        PD.setMessage("Loading markers....");
-        PD.show();
-        Log.d("EXTRAS", "before string request");
-        insertloginlocation();
-
-        StringRequest request = new StringRequest(Helper.variables.URL_SELECT_ALL_CUSTINFO_LEFTJOIN_PONDINFO,
+        StringRequest postRequest = new StringRequest(Request.Method.POST, Helper.variables.URL_SELECT_ALL_CUSTINFO_LEFTJOIN_PONDINFO,
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(final String response) {
 
-                        if (response.substring(1,2).equalsIgnoreCase("0")){
+                   //     Helper.toastLong(activity, response);
+
+                        if (response.substring(1, 2).equalsIgnoreCase("0")) {
                             PD.dismiss();
                             Helper.toastShort(activity, "Something Happened. Please try again later");
-                        }
-                        else{
+                        } else {
                             PD.dismiss();
                             custInfoObjectList = CustAndPondParser.parseFeed(response);
-                            Log.d("UPDATE DISPLAY", "before condition Request");
-
-                            if ( custInfoObjectList != null) {
-                                Log.d("UPDATE DISPLAY", "not null");
+//                            Helper.toastShort(activity, "after parse feed");
+                            if (custInfoObjectList != null) {
+//                                Helper.toastShort(activity, "obj not null");
                                 if (custInfoObjectList.size() > 0) {
-                                    Log.d("EXTRAS", "BEFORE UPDATE RESOPONSE");
+                                 //   Helper.toastShort(activity, "obj not zero");
                                     if (passedintent != null) {
+                                       // Helper.toastShort(activity, "intent not null");
                                         if (passedintent.hasExtra("fromActivity")) {
-                                            Log.d("EXTRAS", "before getextrastring login");
+                                         //   Helper.toastShort(activity, "ihas extra");
                                             if (passedintent.getStringExtra("fromActivity").equalsIgnoreCase("login")) {
-                                                Log.d("EXTRAS", "show all markers before passed intent was null");
+                                             //   Helper.toastShort(activity, "from login");
+
                                                 userid = extrass.getInt("userid");
                                                 userlevel = extrass.getInt("userlevel");
                                                 username = extrass.getString("username");
                                                 firstname = extrass.getString("firstname");
                                                 lastname = extrass.getString("lastname");
                                                 userdescription = extrass.getString("userdescription");
-
+                                                insertloginlocation();
                                                 updateDisplay();
                                             } else {
+                                               // Helper.toastShort(activity, "not login");
                                                 updateDisplay();
                                             }
                                         } else {
@@ -608,22 +603,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 } else {
                                     updateDisplay();
                                 }
-                            }else{updateDisplay();}
-
-
-                            Log.d("EXTRAS", "BEFORE UPDATE DISPLAY");
+                            } else {
+                                updateDisplay();
+                            }
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError ex) {
+                    public void onErrorResponse(VolleyError error) {
                         PD.dismiss();
+                        Helper.toastShort(MapsActivity.this, "Something happened. Please try again later");
                     }
-                });
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", Helper.variables.getGlobalVar_currentUsername(activity));
+                params.put("password", Helper.variables.getGlobalVar_currentUserpassword(activity));
+                params.put("deviceid", Helper.getMacAddress(context));
+                params.put("userid", Helper.variables.getGlobalVar_currentUserID(activity)+"");
+                params.put("userlvl", Helper.variables.getGlobalVar_currentlevel(activity)+"");
+//
+                return params;
+            }
+        };
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(request);
+        MyVolleyAPI api = new MyVolleyAPI();
+        api.addToReqQueue(postRequest, MapsActivity.this);
     }
 
     private void insertloginlocation(){
@@ -710,7 +717,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         }else {
-            final Dialog d = Helper.createCustomDialogOKOnly(activity, "MAP", "There is no farm data to display", "OK");
+            final Dialog d = Helper.createCustomDialogOKOnly(activity, "MAP", "You have not added a farm. You can start by pressing the '+' on the upper right side.", "OK");
             Button ok = (Button) d.findViewById(R.id.btn_dialog_okonly_OK);
             d.show();
 

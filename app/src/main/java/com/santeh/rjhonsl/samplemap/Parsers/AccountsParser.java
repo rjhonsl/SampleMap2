@@ -44,6 +44,10 @@ public class AccountsParser {
                     custInfoObject.setUserid(obj.getInt("users_id"));
                 }
 
+                if (obj.has("assigned_area")){
+                    custInfoObject.setAssingedArea(obj.getString("assigned_area"));
+                }
+
                 if (obj.has("users_userlvl")){
                     custInfoObject.setUserlevel(obj.getInt("users_userlvl"));
                 }

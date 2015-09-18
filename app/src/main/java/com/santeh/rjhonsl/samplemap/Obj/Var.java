@@ -23,6 +23,7 @@ public class Var extends Application {
     private String currentUserFirstname;
     private String currentUserLastname;
     private String currentPassword;
+    private String assignedArea;
 
 
     public String getCurrentPassword() {
@@ -86,4 +87,11 @@ public class Var extends Application {
     }
 
 
+    public String getAssignedArea() {
+        return assignedArea;
+    }
+
+    public void setAssignedArea(String assignedArea) {
+        this.assignedArea = assignedArea;
+    }
 }

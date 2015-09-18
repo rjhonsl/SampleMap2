@@ -205,6 +205,7 @@ public class Activity_LoginScreen extends Activity{
                                             Helper.variables.setGlobalVar_currentLastname(listaccounts.get(0).getLastname(), activity);
                                             Helper.variables.setGlobalVar_currentUsername(txtusername.getText().toString(),activity);
                                             Helper.variables.setGlobalVar_currentUserpassword(txtpassword.getText().toString(),activity);
+                                            Helper.variables.setGlobalVar_currentAssignedArea(listaccounts.get(0).getAssingedArea(), activity);
 
                                             intent.putExtra("userid", listaccounts.get(0).getUserid());
                                             intent.putExtra("userlevel", listaccounts.get(0).getUserlevel());

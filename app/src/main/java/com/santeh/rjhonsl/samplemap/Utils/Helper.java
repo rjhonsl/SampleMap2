@@ -247,6 +247,15 @@ public class Helper {
         }
 
 
+        public static String getGlobalVar_currentAssignedArea( Activity activity ){
+            return  ((Var) activity.getApplication()).getAssignedArea();
+        }
+
+        public static void setGlobalVar_currentAssignedArea(String area, Activity activity ){
+            ((Var) activity.getApplication()).setAssignedArea(area);
+        }
+
+
 
     }
 
