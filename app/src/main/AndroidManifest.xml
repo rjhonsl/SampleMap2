@@ -101,10 +101,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Main.MapsActivity_UserMonitoring" android:label="Log ">
+        <activity android:name=".Main.MapsActivity_UserMonitoring"
+                  android:label="User Activities">
         </activity>
 
-        <activity android:name=".Main.Activity_UserMonitoring_ViewByUser" android:label="Log ">
+        <activity android:name=".Main.Activity_UserMonitoring_ViewByUser"
+                >
         </activity>
 
 

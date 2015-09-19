@@ -31,11 +31,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
 import com.santeh.rjhonsl.samplemap.Obj.Var;
 import com.santeh.rjhonsl.samplemap.R;
 
@@ -68,7 +70,9 @@ public class Helper {
 
             public static String ADD_POND   ="Add Pond Information";
             public static String DELETE_POND="Delete Pond Information";
-            public static String Edit_POND  ="Edit Pond Information";
+            public static String Edit_POND  ="Modify Pond Information";
+
+            public static String USER_LOGIN = "Login";
 
 
         }
@@ -87,6 +91,7 @@ public class Helper {
         public static String URL_SELECT_ALL_PONDINFO_GROUPBY_CUSTINFO = "http://mysanteh.site50.net/santehweb/selectAllPondGroupBy.php";
         public static String URL_SELECT_ALL_PONDINFO = "http://mysanteh.site50.net/santehweb/selectAllPond.php";
         public static String URL_SELECT_ALL_USERS  = "http://mysanteh.site50.net/santehweb/selectAllUsers.php";
+        public static String URL_SELECT_ALL_USERS_ACTIVITY  = "http://mysanteh.site50.net/santehweb/selectUserActivityByID.php";
         public static String URL_SELECT_ALL_PONDINFO_BETWEEN_DATES = "http://mysanteh.site50.net/santehweb/selectAllPondBetweenDate.php";
         public static String URL_SELECT_ALL_PONDINFO_LEFTJOIN_CUSTINFO = "http://mysanteh.site50.net/santehweb/selectAllPondInfoLeftJoinCustInfo.php";
 
@@ -470,11 +475,11 @@ public class Helper {
 
 
         Marker marker = map.addMarker(new MarkerOptions()
-                .title(id + "-" + farmname + "-" + totalstock + "-" + specie)
-                .icon(BitmapDescriptorFactory.fromResource(iconResID))
-                .snippet(address)
-                .position(latlng)
-                .draggable(false)
+                        .title(id + "-" + farmname + "-" + totalstock + "-" + specie)
+                        .icon(BitmapDescriptorFactory.fromResource(iconResID))
+                        .snippet(address)
+                        .position(latlng)
+                        .draggable(false)
         );
         return marker;
     }
@@ -760,6 +765,18 @@ public class Helper {
         return activity.getResources().getString(resID);
     }
 
+    public static void moveCameraAnimate(final GoogleMap map, final LatLng latlng, final int zoom) {
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom));
+    }
+
+    public static Bitmap iconGeneratorSample(Context context, String str, Activity activity) {
+
+        IconGenerator iconGenerator = new IconGenerator(context);
+        //iconGenerator.setBackground(activity.getResources().getDrawable(R.drawable.ic_place_red_24dp));
+        iconGenerator.setColor(R.color.red);
+        iconGenerator.setTextAppearance(R.style.IconGeneratorTextView);
+        return  iconGenerator.makeIcon(str);
+    }
 
 
 

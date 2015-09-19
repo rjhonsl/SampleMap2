@@ -35,8 +35,8 @@ public class AdapterUsermonitoring_ViewByUser extends ArrayAdapter<CustInfoObjec
 	}
 
 	private class ViewHolder {
-		TextView assigneArea;
-		TextView Fullname;
+		TextView fullName;
+		TextView areaAssigned;
 	}
 
 	public View getView(int position, View view, ViewGroup parent) {
@@ -51,8 +51,8 @@ public class AdapterUsermonitoring_ViewByUser extends ArrayAdapter<CustInfoObjec
 
 			view = inflater.inflate(R.layout.item_lv_viewcustomerinfo, null);
 
-			holder.Fullname = (TextView) view.findViewById(R.id.item_lv_vcnf_address);
-			holder.assigneArea = (TextView) view.findViewById(R.id.item_lv_vcnf_custname);
+			holder.areaAssigned = (TextView) view.findViewById(R.id.item_lv_vcnf_address);
+			holder.fullName = (TextView) view.findViewById(R.id.item_lv_vcnf_custname);
 			view.setTag(holder);
 		}
 		else
@@ -61,9 +61,18 @@ public class AdapterUsermonitoring_ViewByUser extends ArrayAdapter<CustInfoObjec
 			holder = (ViewHolder) view.getTag();
 		}
 
+		String userPosition="";
+		if (ItemList.get(position).getUserlevel() == 2 ) {
+			userPosition = "Area Manager";
+		}else if (ItemList.get(position).getUserlevel() == 3 ) {
+			userPosition = "Area Supervisor";
+		}else if (ItemList.get(position).getUserlevel() == 4 ) {
+			userPosition = "TSR/Technician";
+		}
+
 //		 Capture position and set to the TextViews
-		holder.Fullname.setText(ItemList.get(position).getFirstname() + " " + ItemList.get(position).getLastname());//reversed this//
-		holder.assigneArea.setText("Assigned Area: N/A");
+		holder.areaAssigned.setText(userPosition + " - " + "Assigned Area: N/A");//reversed this//
+		holder.fullName.setText(ItemList.get(position).getFirstname() + " " + ItemList.get(position).getLastname());
 
 
 		return view;

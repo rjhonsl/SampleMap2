@@ -51,6 +51,7 @@ import com.santeh.rjhonsl.samplemap.R;
 import com.santeh.rjhonsl.samplemap.Utils.FusedLocation;
 import com.santeh.rjhonsl.samplemap.Utils.GPSTracker;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
+import com.santeh.rjhonsl.samplemap.Utils.Logging;
 
 import java.util.HashMap;
 import java.util.List;
@@ -730,44 +731,49 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
               lastname = extrass.getString("lastname");
               userdescription = extrass.getString("userdescription");
 
-              StringRequest postRequest = new StringRequest(Request.Method.POST, Helper.variables.URL_INSERT_LOGINLOCATION,
-                      new Response.Listener<String>() {
-                          @Override
-                          public void onResponse(final String response) {
+              if (Logging.loguserAction(activity, context, Helper.userActions.TSR.USER_LOGIN, Helper.variables.ACTIVITY_LOG_TYPE_TSR_MONITORING)){
+                  Helper.toastShort(activity, "Location found :) ");
+                  passedintent = null;
+              }
 
-                              if (response.substring(1, 2).equalsIgnoreCase("0")) {
-                                  PD.dismiss();
-                                  Helper.toastShort(activity, "Something Happened. Please try again later" + response);
-                              } else {
-                                  PD.dismiss();
-                                  extrass = null;
-                                  passedintent=null;
-                                  Helper.toastShort(activity, "Location found :) ");
-                              }
-
-                          }
-                      },
-                      new Response.ErrorListener() {
-                          @Override
-                          public void onErrorResponse(VolleyError error) {
-                              PD.dismiss();
-                              Helper.toastShort(MapsActivity.this, "Something happened. Please try again later");
-                          }
-                      }) {
-                  @Override
-                  protected Map<String, String> getParams() {
-                      Map<String, String> params = new HashMap<String, String>();
-                      params.put("userid", userid + "");
-                      params.put("latitude", fusedLocation.getLastKnowLocation().latitude + "");
-                      params.put("longitude", fusedLocation.getLastKnowLocation().longitude+ "");
+//              StringRequest postRequest = new StringRequest(Request.Method.POST, Helper.variables.URL_INSERT_LOGINLOCATION,
+//                      new Response.Listener<String>() {
+//                          @Override
+//                          public void onResponse(final String response) {
 //
-                      return params;
-                  }
-              };
-
-              // Adding request to request queue
-              MyVolleyAPI api = new MyVolleyAPI();
-              api.addToReqQueue(postRequest, MapsActivity.this);
+//                              if (response.substring(1, 2).equalsIgnoreCase("0")) {
+//                                  PD.dismiss();
+//                                  Helper.toastShort(activity, "Something Happened. Please try again later" + response);
+//                              } else {
+//                                  PD.dismiss();
+//                                  extrass = null;
+//                                  passedintent=null;
+//                                  Helper.toastShort(activity, "Location found :) ");
+//                              }
+//
+//                          }
+//                      },
+//                      new Response.ErrorListener() {
+//                          @Override
+//                          public void onErrorResponse(VolleyError error) {
+//                              PD.dismiss();
+//                              Helper.toastShort(MapsActivity.this, "Something happened. Please try again later");
+//                          }
+//                      }) {
+//                  @Override
+//                  protected Map<String, String> getParams() {
+//                      Map<String, String> params = new HashMap<String, String>();
+//                      params.put("userid", userid + "");
+//                      params.put("latitude", fusedLocation.getLastKnowLocation().latitude + "");
+//                      params.put("longitude", fusedLocation.getLastKnowLocation().longitude+ "");
+////
+//                      return params;
+//                  }
+//              };
+//
+//              // Adding request to request queue
+//              MyVolleyAPI api = new MyVolleyAPI();
+//              api.addToReqQueue(postRequest, MapsActivity.this);
           }
 
         }

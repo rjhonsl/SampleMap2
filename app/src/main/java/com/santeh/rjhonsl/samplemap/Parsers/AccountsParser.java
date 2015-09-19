@@ -77,7 +77,6 @@ public class AccountsParser {
 
 
 
-
                 Log.d("JSON PARSE", "ID: " + custInfoObject.getId() + " " + custInfoObject.getCustomerID() + " " + ar.length());
                 custInfoObjectList.add(custInfoObject);
 

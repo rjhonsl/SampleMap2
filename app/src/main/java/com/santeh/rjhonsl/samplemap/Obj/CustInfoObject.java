@@ -22,7 +22,9 @@ public class CustInfoObject {
 	private String dateAddedToDB;
 	private Bitmap bitmap;
 
+	private String dateTime;
 	private String assingedArea;
+	private String actionType;
 
 
 	private String username;
@@ -51,6 +53,8 @@ public class CustInfoObject {
 	private String remarks;
 	private String allSpecie;
 	private String currentfeedType;
+
+	private String actionDone;
 
 
 	private String recommendedConsumption;
@@ -420,5 +424,29 @@ public class CustInfoObject {
 
 	public void setWaterType(String waterType) {
 		this.waterType = waterType;
+	}
+
+	public String getActionDone() {
+		return actionDone;
+	}
+
+	public void setActionDone(String actionDone) {
+		this.actionDone = actionDone;
+	}
+
+	public String getDateTime() {
+		return dateTime;
+	}
+
+	public void setDateTime(String dateTime) {
+		this.dateTime = dateTime;
+	}
+
+	public String getActionType() {
+		return actionType;
+	}
+
+	public void setActionType(String actionType) {
+		this.actionType = actionType;
 	}
 }

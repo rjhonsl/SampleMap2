@@ -3,7 +3,10 @@ package com.santeh.rjhonsl.samplemap.Main;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.Request;
@@ -44,9 +47,19 @@ public class Activity_UserMonitoring_ViewByUser extends Activity {
 
         PD = new ProgressDialog(this);
         PD. setCancelable(false);
+        Helper.hidekeyboardOnLoad(activity);
 
         lvUsers = (ListView) findViewById(R.id.listview_userMonitoring);
         getAllUsers();
+
+        lvUsers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(Activity_UserMonitoring_ViewByUser.this, MapsActivity_UserMonitoring.class);
+                intent.putExtra("userid", userlist.get(position).getUserid());
+                startActivity(intent);
+            }
+        });
 
     }
 

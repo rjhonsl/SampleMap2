@@ -2,6 +2,7 @@ package com.santeh.rjhonsl.samplemap.Utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -19,14 +20,23 @@ import java.util.Map;
 public class Logging {
     static boolean isRecorded = false;
     static  FusedLocation fusedLocation;
-    public static boolean loguserAction(Activity activity, Context context, String userAction, String actionType ) {
+    public static boolean loguserAction(final Activity activity, final Context context, final String userAction, final String actionType ) {
         fusedLocation = new FusedLocation(context, activity);
         fusedLocation.buildGoogleApiClient(context);
+
         fusedLocation.connectToApiClient();
 
-        return Logging.InsertUserActivity(activity, context, Helper.variables.getGlobalVar_currentUserID(activity) + "",
-                userAction, actionType,
-                fusedLocation.getLastKnowLocation().latitude + "", fusedLocation.getLastKnowLocation().longitude + "");
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Logging.InsertUserActivity(activity, context, Helper.variables.getGlobalVar_currentUserID(activity) + "",
+                        userAction, actionType,
+                        fusedLocation.getLastKnowLocation().latitude + "", fusedLocation.getLastKnowLocation().longitude + "");
+            }
+        }, 200);
+
+       return true;
     }
 
 
@@ -34,7 +44,6 @@ public class Logging {
     public static boolean InsertUserActivity(final Activity activity, final Context context,
     final String userid, final String action, final String actiontype, final String latitude, final String longitude){
 
-        fusedLocation.connectToApiClient();
 
         StringRequest postRequest = new StringRequest(Request.Method.POST,
                 Helper.variables.URL_INSERT_USER_ACTIVITY,
