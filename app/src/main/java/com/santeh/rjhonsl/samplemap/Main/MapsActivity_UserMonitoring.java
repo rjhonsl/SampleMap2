@@ -20,7 +20,7 @@ import com.santeh.rjhonsl.samplemap.Utils.Helper;
 /**
  * Created by rjhonsl on 9/11/2015.
  */
-public class MapsActivity_FusedLocationSample extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity_UserMonitoring extends AppCompatActivity implements OnMapReadyCallback {
 
     Activity activity;
     Context context;
@@ -30,9 +30,9 @@ public class MapsActivity_FusedLocationSample extends AppCompatActivity implemen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_maps_usermonitoring);
         activity = this;
-        context = MapsActivity_FusedLocationSample.this;
+        context = MapsActivity_UserMonitoring.this;
 
         fusedLocation = new FusedLocation(context, activity);
         fusedLocation.connectToApiClient();
@@ -40,7 +40,7 @@ public class MapsActivity_FusedLocationSample extends AppCompatActivity implemen
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(MapsActivity_FusedLocationSample.this);
+        mapFragment.getMapAsync(MapsActivity_UserMonitoring.this);
 
 
         ImageButton button = (ImageButton) findViewById(R.id.btnaddMarker);

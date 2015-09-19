@@ -20,9 +20,11 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -84,7 +86,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LatLng curLatlng, lastlatlng;
 
     TextView textView, tvlat, tvlong;
-    TextView nav_fingerlings, nav_Stockings, nav_sperms, nav_maptype, nav_displayAllMarkers, nav_settings, nav_growout, txtusername;
+    TextView nav_fingerlings, nav_Stockings, nav_sperms, nav_logout, nav_maptype, nav_displayAllMarkers, nav_settings, nav_growout,nav_usermonitoring, txtusername;
 
     EditText editSearch;
     String Stritem;
@@ -135,7 +137,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         nav_settings = (TextView) findViewById(R.id.txt_Nav_settings);
         map_add_marker = (ImageButton) findViewById(R.id.btnaddMarker);
         nav_growout = (TextView) findViewById(R.id.txt_Nav_growOut);
+        nav_logout = (TextView) findViewById(R.id.txt_Nav_logout);
         textView = (TextView) findViewById(R.id.latLong);
+        nav_usermonitoring = (TextView) findViewById(R.id.txt_Nav_UserMonitoring);
         txtusername = (TextView) findViewById(R.id.username);
 
 
@@ -248,6 +252,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onMapLongClick(final LatLng latLng) {
 
             }
+
+        });
+
+        nav_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
         });
 
 
@@ -284,6 +296,61 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 closeDrawer();
             }
         });
+
+        nav_usermonitoring.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(MapsActivity.this, Activity_UserMonitoringOptions.class);
+                closeDrawer();
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(intent);
+                        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                    }
+                }, 280);
+            }
+        });
+
+
+        nav_maptype.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                closeDrawer();
+
+                String[] maptypes = {"Normal","Satellite","Terrain", "Hybrid"};
+                final Dialog dd = Helper.createCustomListDialog(activity, maptypes, "Map Types");
+                ListView lstMapType = (ListView) dd.findViewById(R.id.dialog_list_listview);
+                dd.show();
+//                public static final int MAP_TYPE_NORMAL = 1;
+//                public static final int MAP_TYPE_SATELLITE = 2;
+//                public static final int MAP_TYPE_TERRAIN = 3;
+//                public static final int MAP_TYPE_HYBRID = 4;
+
+                lstMapType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (position == 0){
+                            map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                            dd.hide();
+                        }else if (position == 1) {
+                            map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                            dd.hide();
+                        }else if (position == 2) {
+                            map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                            dd.hide();
+                        }
+                        else if (position == 3) {
+                            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                            dd.hide();
+                        }
+                    }
+                });
+            }
+        });
+
 
         map_add_marker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -422,13 +489,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private Bitmap iconGeneratorSample(Context context) {
+    private Bitmap iconGeneratorSample(Context context, String str) {
 
         IconGenerator iconGenerator = new IconGenerator(context);
-
-        Bitmap bitmap = iconGenerator.makeIcon("Sample");
-
-        return null;
+        iconGenerator.setBackground(getResources().getDrawable(R.drawable.ic_place_red_24dp));
+//        iconGenerator.setColor(Color.parseColor("#00000"));
+        iconGenerator.setColor(R.color.yellow);
+        iconGenerator.setTextAppearance(R.style.IconGeneratorTextView);
+        return  iconGenerator.makeIcon(str);
     }
 
     private boolean checkIfLocationAvailable() {
@@ -562,6 +630,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void showAllRelatedMarkers(){
+        PD.setMessage("Please wait...");
+        PD.show();
 
         StringRequest postRequest = new StringRequest(Request.Method.POST, Helper.variables.URL_SELECT_ALL_CUSTINFO_LEFTJOIN_PONDINFO,
                 new Response.Listener<String>() {
@@ -640,11 +710,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void insertloginlocation(){
-        PD.show();
-        PD.setMessage("Getting location data...");
         fusedLocation.connectToApiClient();
-
-
         if (Helper.isIntentKeywordNotNull("fromActivity", passedintent)){
           if (extrass.getString("fromActivity").equalsIgnoreCase("login")) {
               Log.d("EXTRAS", "fromactivity = login");
@@ -668,9 +734,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                   PD.dismiss();
                                   extrass = null;
                                   passedintent=null;
-                                  Helper.toastShort(activity, "Location found :) "
-//                                          + "" + " " + userid + " " + curlat + " " + curLong + " "  + response
-                                  );
+                                  Helper.toastShort(activity, "Location found :) ");
                               }
 
                           }
@@ -718,7 +782,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.d("JSON PARSE", "" + ci.getFarmID() +" " +ci.getFarmname());
                 LatLng custLatlng = new LatLng(Double.parseDouble(ci.getLatitude()), Double.parseDouble(ci.getLongtitude()));
                 Marker marker = Helper.map_addMarker(maps, custLatlng,
-                        R.drawable.ic_place_red_24dp, ci.getFarmname(), ci.getAddress(), ci.getCi_id()+"", ci.getTotalStockOfFarm()+"", ci.getAllSpecie());
+                        R.drawable.ic_place_red_24dp, ci.getFarmname(), ci.getAddress(), ci.getCi_id() + "", ci.getTotalStockOfFarm() + "", ci.getAllSpecie());
 
             }
         }else {
@@ -732,7 +796,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     d.hide();
                 }
             });
-
         }
 
     }
@@ -812,6 +875,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onBackPressed() {
+        exitApp();
+    }
+
+    private void exitApp() {
         final Dialog d = Helper.createCustomDialoYesNO(activity, R.layout.dialog_material_yesno, "Do you wish to wish to exit the app? You will have to login next time.", "EXIT", "YES", "NO");
         d.show();
         Button yes = (Button) d.findViewById(R.id.btn_dialog_yesno_opt1);
@@ -835,8 +902,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 d.hide();
             }
         });
+    }
 
 
+    private void logout() {
+        final Dialog d = Helper.createCustomDialoYesNO(activity, R.layout.dialog_material_yesno, "Do you wish to wish to return to Login Screen?", "Log Out", "YES", "NO");
+        d.show();
+        Button yes = (Button) d.findViewById(R.id.btn_dialog_yesno_opt1);
+        Button no = (Button) d.findViewById(R.id.btn_dialog_yesno_opt2);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.hide();
+                finish();
+            }
+        });
+
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.hide();
+            }
+        });
     }
 
 

@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -259,5 +260,37 @@ public class Activity_LoginScreen extends Activity{
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        exitApp();
+    }
+
+    private void exitApp() {
+        final Dialog d = Helper.createCustomDialoYesNO(activity, R.layout.dialog_material_yesno, "Do you wish to wish to exit the app?", "EXIT", "YES", "NO");
+        d.show();
+        Button yes = (Button) d.findViewById(R.id.btn_dialog_yesno_opt1);
+        Button no = (Button) d.findViewById(R.id.btn_dialog_yesno_opt2);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.hide();
+                finishAffinity();
+                Intent setIntent = new Intent(Intent.ACTION_MAIN);
+                setIntent.addCategory(Intent.CATEGORY_HOME);
+                setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(setIntent);
+            }
+        });
+
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.hide();
+            }
+        });
     }
 }//end of class

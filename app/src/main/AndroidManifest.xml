@@ -89,8 +89,11 @@
                   android:label="Summary Options">
         </activity>
 
+        <activity android:name=".Main.Activity_UserMonitoringOptions"
+                  android:label="Monitoring Options">
+        </activity>
+
         <activity android:name=".Main.Activity_LoginScreen"
-                  android:noHistory="true"
                   android:label="Santeh CRM">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -98,8 +101,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Main.MapsActivity_FusedLocationSample" android:label="Log ">
+        <activity android:name=".Main.MapsActivity_UserMonitoring" android:label="Log ">
+        </activity>
 
+        <activity android:name=".Main.Activity_UserMonitoring_ViewByUser" android:label="Log ">
         </activity>
 
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -464,15 +465,28 @@ public class Helper {
     }
 
     public static Marker map_addMarker(GoogleMap map, LatLng latlng, int iconResID,
-                                       final String farmname, final String address, String id, String totalstock, String specie){
+                                        final String farmname, final String address, String id, String totalstock, String specie){
 
 
         Marker marker = map.addMarker(new MarkerOptions()
-
                 .title(id + "-" + farmname + "-" + totalstock + "-" + specie)
                 .icon(BitmapDescriptorFactory.fromResource(iconResID))
                 .snippet(address)
-                .position(latlng).draggable(true));
+                .position(latlng)
+                .draggable(false)
+        );
+        return marker;
+    }
+
+    public static Marker map_addMarkerIconGen(GoogleMap map, LatLng latlng, Bitmap iconResID,
+                                       final String farmname, final String address, String id, String totalstock, String specie){
+        Marker marker = map.addMarker(new MarkerOptions()
+                .title(id + "-" + farmname + "-" + totalstock + "-" + specie)
+                .icon(BitmapDescriptorFactory.fromBitmap(iconResID))
+                .snippet(address)
+                .position(latlng)
+                .draggable(false)
+        );
         return marker;
     }
 
