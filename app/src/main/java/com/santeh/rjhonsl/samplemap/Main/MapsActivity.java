@@ -128,6 +128,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         nav_displayAllMarkers = (TextView) findViewById(R.id.txt_Nav_displayAll);
         nav_fingerlings = (TextView) findViewById(R.id.txt_Nav_fingerlings);
@@ -142,6 +143,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         nav_usermonitoring = (TextView) findViewById(R.id.txt_Nav_UserMonitoring);
         txtusername = (TextView) findViewById(R.id.username);
 
+
+        if (Helper.variables.getGlobalVar_currentlevel(activity) == 1 ||
+                Helper.variables.getGlobalVar_currentlevel(activity) == 2){
+            nav_usermonitoring.setVisibility(View.GONE);
+        }else{
+            nav_usermonitoring.setVisibility(View.VISIBLE);
+        }
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
