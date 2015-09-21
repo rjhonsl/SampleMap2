@@ -1,6 +1,7 @@
 package com.santeh.rjhonsl.samplemap.Main;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,10 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -45,6 +50,8 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
 
     GoogleMap gmap;
 
+    ImageButton btnChangeMaptype;
+
     int passedUserid;
 
     List <CustInfoObject> useractivityList;
@@ -77,6 +84,8 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
         }
 
 
+        btnChangeMaptype = (ImageButton) findViewById(R.id.btn_changeMaptype);
+
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -91,6 +100,8 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
         gmap = googleMap;
 
         fusedLocation.connectToApiClient();
@@ -108,6 +119,38 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
             }
         }, 200);
 
+        btnChangeMaptype.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String[] maptypes = {"Normal","Satellite","Terrain", "Hybrid"};
+                final Dialog dd = Helper.createCustomListDialog(activity, maptypes, "Map Types");
+                ListView lstMapType = (ListView) dd.findViewById(R.id.dialog_list_listview);
+                dd.show();
+
+                lstMapType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (position == 0){
+                            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                            dd.hide();
+                        }else if (position == 1) {
+                            googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                            dd.hide();
+                        }else if (position == 2) {
+                            googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                            dd.hide();
+                        }
+                        else if (position == 3) {
+                            googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                            dd.hide();
+                        }
+                    }
+                });
+
+            }
+        });
+
         getAllUsers();
 
     }
@@ -124,15 +167,15 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
         else{
 
 
-            StringRequest postRequest = new StringRequest(Request.Method.POST, Helper.variables.URL_SELECT_ALL_USERS_ACTIVITY,
+            final StringRequest postRequest = new StringRequest(Request.Method.POST, Helper.variables.URL_SELECT_ALL_USERS_ACTIVITY,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
 
-                            Helper.toastLong(activity, response + " "+passedUserid);
+//                            Helper.toastLong(activity, response + " "+passedUserid);
                             if (response.substring(1,2).equalsIgnoreCase("0")){
                                 PD.dismiss();
-                                Helper.toastShort(activity, "Something happened. Please try again later.");
+                                Helper.toastShort(activity, "No activity/map data to display");
                             }else{
 
                                 PD.dismiss();
@@ -142,13 +185,18 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
                                 if (useractivityList != null){
                                     if (useractivityList.size() > 0){
                                         for (int i = 0; i < useractivityList.size(); i++) {
+
+
                                             Helper.map_addMarkerIconGen(gmap,
-                                                   new LatLng(Double.parseDouble(useractivityList.get(i).getLatitude()), Double.parseDouble(useractivityList.get(i).getLongtitude())),
-                                                    Helper.iconGeneratorSample(context, i+"", activity), "","","","","");
+                                                    new LatLng(Double.parseDouble(useractivityList.get(i).getLatitude()), Double.parseDouble(useractivityList.get(i).getLongtitude())),//gets latlong
+                                                    Helper.iconGeneratorSample(context, (i + 1) + "", activity), //creates an icon with a number
+                                                    useractivityList.get(i).getActionDone(), //action done by the user in the latlong
+                                                    Helper.convertLongtoDateTimeString(Helper.convertDateTimeStringToMilis(useractivityList.get(i).getDateTime()))//date when action was done
+                                            );
                                         }
                                     }
                                 }else{
-                                    Helper.toastLong(activity, "Something happened. Please try again later");
+                                    Helper.toastLong(activity, "No activity/map data to display");
                                 }
 
                             }

@@ -41,18 +41,18 @@
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"/>-->
 
-        <!--<ImageButton-->
-            <!--android:padding="8dp"-->
-            <!--android:layout_marginRight="11dp"-->
-            <!--android:layout_marginTop="60dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:background="@drawable/bg_white_box_shadowed"-->
-            <!--android:src="@drawable/ic_add_circle_red_24dp"-->
-            <!--android:id="@+id/btnaddMarker"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--/>-->
+        <ImageButton
+            android:padding="8dp"
+            android:layout_marginRight="11dp"
+            android:layout_marginTop="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/bg_white_box_shadowed"
+            android:src="@drawable/ic_map_darkteal_24dp"
+            android:id="@+id/btn_changeMaptype"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Change map types"/>
     </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>

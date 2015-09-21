@@ -48,7 +48,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/bg_white_box_shadowed"
-            android:src="@drawable/ic_add_circle_red_24dp"
+            android:src="@drawable/ic_add_black_24dp"
             android:id="@+id/btnaddMarker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

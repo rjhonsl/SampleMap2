@@ -68,6 +68,10 @@ public class AdapterUsermonitoring_ViewByUser extends ArrayAdapter<CustInfoObjec
 			userPosition = "Area Supervisor";
 		}else if (ItemList.get(position).getUserlevel() == 4 ) {
 			userPosition = "TSR/Technician";
+		}else if(ItemList.get(position).getUserlevel() == 0 ){
+			userPosition = "Admin";
+		}else if(ItemList.get(position).getUserlevel() == 1 ){
+			userPosition = "Top Management";
 		}
 
 //		 Capture position and set to the TextViews

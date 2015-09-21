@@ -161,6 +161,20 @@ public class Activity_WeeklyReports_Growout_FarmSummary extends Activity {
         adapterPondWeeklyReport = new Adapter_Growouts_PondWeekLyConsumption(Activity_WeeklyReports_Growout_FarmSummary.this,
                 R.layout.item_lv_weeklypondsummary, pondconsumptionList);
         lvPonds.setAdapter(adapterPondWeeklyReport);
+
+        scrollMyListViewToBottom(lvPonds, adapterPondWeeklyReport, startWeek);
+
+
+    }
+
+    private void scrollMyListViewToBottom(final ListView myListView, final Adapter_Growouts_PondWeekLyConsumption myListAdapter, final int position ) {
+        myListView.post(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                myListView.setSelection(position - 1);
+            }
+        });
     }
 
     public void setStartWeekHighLight(int weekstarted, int weekCurrent) {

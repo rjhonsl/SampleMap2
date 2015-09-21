@@ -144,13 +144,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         nav_usermonitoring = (TextView) findViewById(R.id.txt_Nav_UserMonitoring);
         txtusername = (TextView) findViewById(R.id.username);
 
+//
+//
 
-        if (Helper.variables.getGlobalVar_currentlevel(activity) == 1 ||
-                Helper.variables.getGlobalVar_currentlevel(activity) == 2){
-            nav_usermonitoring.setVisibility(View.GONE);
-        }else{
-            nav_usermonitoring.setVisibility(View.VISIBLE);
-        }
+
+
+
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -222,6 +221,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.setInfoWindowAdapter(new CustomInfoWindowAdapter());
         initListners(map);
         fusedLocation.connectToApiClient();
+
+
+        if (Helper.variables.getGlobalVar_currentlevel(activity) > 1){
+            nav_usermonitoring.setVisibility(View.GONE);
+        }else{
+            nav_usermonitoring.setVisibility(View.VISIBLE);
+        }
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -333,10 +339,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 final Dialog dd = Helper.createCustomListDialog(activity, maptypes, "Map Types");
                 ListView lstMapType = (ListView) dd.findViewById(R.id.dialog_list_listview);
                 dd.show();
-//                public static final int MAP_TYPE_NORMAL = 1;
-//                public static final int MAP_TYPE_SATELLITE = 2;
-//                public static final int MAP_TYPE_TERRAIN = 3;
-//                public static final int MAP_TYPE_HYBRID = 4;
 
                 lstMapType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

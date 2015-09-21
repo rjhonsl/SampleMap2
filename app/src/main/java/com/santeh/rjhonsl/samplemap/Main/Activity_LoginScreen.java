@@ -155,6 +155,9 @@ public class Activity_LoginScreen extends Activity{
 
         txtusername.getBackground().setColorFilter(getResources().getColor(R.color.yellow), PorterDuff.Mode.SRC_IN);
         txtpassword.getBackground().setColorFilter(getResources().getColor(R.color.yellow), PorterDuff.Mode.SRC_IN);
+
+        txtpassword.setText("");
+        txtusername.setText("");
     }
 
     private void toggle_showpassword() {

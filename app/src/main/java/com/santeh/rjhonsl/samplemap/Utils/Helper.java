@@ -484,12 +484,11 @@ public class Helper {
         return marker;
     }
 
-    public static Marker map_addMarkerIconGen(GoogleMap map, LatLng latlng, Bitmap iconResID,
-                                       final String farmname, final String address, String id, String totalstock, String specie){
+    public static Marker map_addMarkerIconGen(GoogleMap map, LatLng latlng, Bitmap iconResID, final String activity, String datetime){
         Marker marker = map.addMarker(new MarkerOptions()
-                .title(id + "-" + farmname + "-" + totalstock + "-" + specie)
+                .title(activity)
                 .icon(BitmapDescriptorFactory.fromBitmap(iconResID))
-                .snippet(address)
+                .snippet(datetime)
                 .position(latlng)
                 .draggable(false)
         );
@@ -575,8 +574,31 @@ public class Helper {
         return startDate;
     }
 
+
+    public static long convertDateTimeStringToMilis(String datetime){
+        long startDate=000000;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = sdf.parse(datetime);
+            startDate = date.getTime();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return startDate;
+    }
+
     public static String convertLongtoDateString(long dateInMillis){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
+        return formatter.format(calendar.getTime());
+    }
+
+
+    public static String convertLongtoDateTimeString(long dateInMillis){
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(dateInMillis);
@@ -772,8 +794,8 @@ public class Helper {
     public static Bitmap iconGeneratorSample(Context context, String str, Activity activity) {
 
         IconGenerator iconGenerator = new IconGenerator(context);
-        //iconGenerator.setBackground(activity.getResources().getDrawable(R.drawable.ic_place_red_24dp));
-        iconGenerator.setColor(R.color.red);
+        iconGenerator.setBackground(activity.getResources().getDrawable(R.drawable.ic_place_red_24dp));
+        iconGenerator.setStyle(IconGenerator.STYLE_GREEN);
         iconGenerator.setTextAppearance(R.style.IconGeneratorTextView);
         return  iconGenerator.makeIcon(str);
     }

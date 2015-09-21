@@ -55,7 +55,7 @@ public class UserActivityParser {
                 }
 
                 if (obj.has("user_act_datetime")) {
-                    custInfoObject.setDateTime(obj.getString("user_act_longitude"));
+                    custInfoObject.setDateTime(obj.getString("user_act_datetime"));
                 }
 
                 if (obj.has("user_act_actiontype")) {

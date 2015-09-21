@@ -114,23 +114,32 @@ public class Adapter_Growouts_PondWeekLyConsumption extends ArrayAdapter<CustInf
 
 
 
-		if ((position + 1) == objArrayList.get(position).getStartweekofStock() ){
-			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_lightred_box_curvebottom));
 
-		}
-		else if((position+1) == objArrayList.get(position).getWeek() ){
-			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_blue_box_curvebottom));
-		}
-		else{
-			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_darkteal_box_curvebottom));
-		}
+
 
 		if (position + 1 < objArrayList.get(position).getWeek()) {
 			holder.wrapper.setBackgroundColor(Color.parseColor("#bfbfbf"));
 			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_darkgray_box_curvebottom));
 			holder.txtrecommended.setTextColor(Color.parseColor("#000000"));
-		}else{
 
+		}else{
+			holder.wrapper.setBackgroundColor(Color.parseColor("#00000000"));
+			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_darkteal_box_curvebottom));
+			holder.txtrecommended.setTextColor(Color.parseColor("#42A5F5"));
+		}
+
+
+		if ( (position + 1) == objArrayList.get(position).getStartweekofStock() ){
+			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_lightred_box_curvebottom));
+
+		}
+		else if( (position+1) == objArrayList.get(position).getWeek() ){
+			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_blue_box_curvebottom));
+		}else if( (position+1) == objArrayList.get(position).getWeek() && (position + 1) == objArrayList.get(position).getStartweekofStock()) {
+			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_blue_box_curvebottom));
+		}
+		else{
+			holder.weeknoHOlder.setBackground(context.getResources().getDrawable(R.drawable.bg_darkteal_box_curvebottom));
 		}
 
 
