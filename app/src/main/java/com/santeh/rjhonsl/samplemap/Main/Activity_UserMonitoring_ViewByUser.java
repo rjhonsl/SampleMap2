@@ -57,6 +57,8 @@ public class Activity_UserMonitoring_ViewByUser extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(Activity_UserMonitoring_ViewByUser.this, MapsActivity_UserMonitoring.class);
                 intent.putExtra("userid", userlist.get(position).getUserid());
+                intent.putExtra("firstname", userlist.get(position).getFirstname());
+                intent.putExtra("lastname", userlist.get(position).getLastname());
                 startActivity(intent);
             }
         });

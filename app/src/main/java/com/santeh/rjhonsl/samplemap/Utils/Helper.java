@@ -444,11 +444,13 @@ public class Helper {
         text.setText(msg);
 
         Toast toast = new Toast(context.getApplicationContext());
-        toast.setGravity(Gravity.BOTTOM|Gravity.FILL_HORIZONTAL, 0, 0);
+        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, 0);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setMargin(0, 0);
         toast.setView(layout);
         toast.show();
+
+
     }
 
     public static void toastLong(Activity context, String msg){
@@ -463,7 +465,7 @@ public class Helper {
         text.setText(msg);
 
         Toast toast = new Toast(context.getApplicationContext());
-        toast.setGravity(Gravity.BOTTOM|Gravity.FILL_HORIZONTAL, 0, 0);
+        toast.setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, 0);
         toast.setMargin(0, 0);
         toast.setDuration(Toast.LENGTH_LONG);
         toast.setView(layout);
@@ -574,8 +576,22 @@ public class Helper {
         return startDate;
     }
 
+    public static String convertDatetoGregorain(int yyyy, int MM, int dd){
+        String dateString_gregorian="";
+        try {
+            String dateString = dd+"/"+MM+"/"+yyyy;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+            dateString_gregorian = convertLongtoDate_Gregorian(date.getTime());
 
-    public static long convertDateTimeStringToMilis(String datetime){
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dateString_gregorian;
+    }
+
+
+    public static long convertDateTimeStringToMilis_DB_Format(String datetime){
         long startDate=000000;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -597,6 +613,15 @@ public class Helper {
     }
 
 
+    public static String convertLongtoDate_Gregorian(long dateInMillis){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
+        return formatter.format(calendar.getTime());
+    }
+
+
     public static String convertLongtoDateTimeString(long dateInMillis){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
         // Create a calendar object that will convert the date and time value in milliseconds to date.
@@ -604,6 +629,15 @@ public class Helper {
         calendar.setTimeInMillis(dateInMillis);
         return formatter.format(calendar.getTime());
     }
+
+    public static String convertLongtoDateTime_DB_Format(long dateInMillis){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd hh:mm aa");
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
+        return formatter.format(calendar.getTime());
+    }
+
 
     public static int[] convertLongtoDateFormat(long dateinMilis) {
 //        Calendar calendar = null;

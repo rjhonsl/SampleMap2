@@ -1,5 +1,7 @@
 package com.santeh.rjhonsl.samplemap.Main;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -38,7 +40,7 @@ import java.util.Map;
 public class Activity_LoginScreen extends Activity{
 
     EditText txtusername, txtpassword;
-    TextView txtappname1, txtappname2, txtshowpassword, txtforgot, txtrequestaccount, txttester, txtprogressdialog_message;
+    TextView txtappname1, txtappname2, txtshowpassword, txtforgot, txtrequestaccount, txttester, txtprogressdialog_message, lblusername, lblpassword;
 
     CheckBox chkshowpasword;
     ImageButton btnLogin;
@@ -72,22 +74,10 @@ public class Activity_LoginScreen extends Activity{
 
         Typeface font_roboto = Typeface.createFromAsset(getAssets(), "Roboto-Light.ttf");
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (txtusername.getText().toString().equalsIgnoreCase("") || txtusername.getText().toString().trim().equalsIgnoreCase("")){
-                    Helper.toastShort(activity,"Username is needed");
-                }else if(txtpassword.getText().toString().equalsIgnoreCase("") || txtpassword.getText().toString().trim().equalsIgnoreCase("")){
-                    Helper.toastShort(activity,"Password is needed");
-                }else{
-                    login();
-                }
 
-            }
-        });
         Helper.hidekeyboardOnLoad(activity);
 
-
+        btnLogin.requestFocus();
         txtappname1.setTypeface(font_roboto);
         txtappname2.setTypeface(font_roboto);
         txtpassword.setTypeface(font_roboto);
@@ -96,7 +86,7 @@ public class Activity_LoginScreen extends Activity{
         txttester.setText(
                 Helper.getIMEI(context)
                         + " " +
-                Helper.getMacAddress(context)
+                        Helper.getMacAddress(context)
         );
 
         txtshowpassword.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +104,84 @@ public class Activity_LoginScreen extends Activity{
             }
         });
 
+
+
+        if (txtpassword.isFocused() || !txtpassword.getText().toString().equalsIgnoreCase("")){
+            txtpassword.setVisibility(View.VISIBLE);
+        }
+
+        txtusername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                    if (!txtusername.getText().toString().equalsIgnoreCase("") || hasFocus){
+                        txtusername.setVisibility(View.VISIBLE);
+
+                        lblusername.setAlpha(0);
+                        lblusername.setVisibility(View.VISIBLE);
+                        lblusername.animate()
+                                .translationY(0)
+                                .alpha(255)
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        super.onAnimationEnd(animation);
+                                        txtusername.setHint("");
+                                    }
+                                });
+
+                    }
+                    else{
+                        lblusername.animate()
+                                .alpha(0)
+                                .translationY(lblpassword.getHeight())
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        super.onAnimationEnd(animation);
+                                        lblusername.setVisibility(View.GONE);
+                                        txtusername.setHint("Username...");
+                                    }
+                                });
+                    }
+            }
+        });
+
+        txtpassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!txtpassword.getText().toString().equalsIgnoreCase("") || hasFocus){
+
+                    lblpassword.setAlpha(0);
+                    lblpassword.setVisibility(View.VISIBLE);
+                    lblpassword.animate()
+                            .translationY(0)
+                            .alpha(255)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    txtpassword.setHint("");
+                                }
+                            });
+
+                }
+                else{
+                    lblpassword.animate()
+                            .alpha(0)
+                            .translationY(lblpassword.getHeight())
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    lblpassword.setVisibility(View.GONE);
+                                    txtpassword.setHint("Password...");
+                                }
+                            });
+                }
+            }
+        });
+
+
         txtrequestaccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +195,27 @@ public class Activity_LoginScreen extends Activity{
 
             }
         });
+
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ( ((txtpassword.getText().toString().equalsIgnoreCase("") || txtpassword.getText().toString().trim().equalsIgnoreCase(""))) &&
+                        (txtusername.getText().toString().equalsIgnoreCase("") || txtusername.getText().toString().trim().equalsIgnoreCase(""))){
+                    Helper.toastShort(activity, "Username and Password is needed to continue");
+                }else if(txtpassword.getText().toString().equalsIgnoreCase("") || txtpassword.getText().toString().trim().equalsIgnoreCase("")){
+                    Helper.toastShort(activity, "Password is needed to continue");
+                }else if(txtusername.getText().toString().equalsIgnoreCase("") || txtusername.getText().toString().trim().equalsIgnoreCase(""))
+                {
+                    Helper.toastShort(activity,"Username is needed to continue");
+                }else
+                {
+                    login();
+                }
+
+            }
+        });
+
 
         chkshowpasword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,7 +235,8 @@ public class Activity_LoginScreen extends Activity{
         txtshowpassword = (TextView) findViewById(R.id.txt_loginscreen_showpassword);
         txtforgot = (TextView) findViewById(R.id.txtforgot_password);
         txtrequestaccount = (TextView) findViewById(R.id.txt_requestaccount);
-
+        lblpassword = (TextView) findViewById(R.id.lbl_login_password);
+        lblusername = (TextView) findViewById(R.id.lbl_login_username);
         txttester = (TextView) findViewById(R.id.txttester);
 
         btnLogin = (ImageButton) findViewById(R.id.btn_login);
@@ -156,8 +246,8 @@ public class Activity_LoginScreen extends Activity{
         txtusername.getBackground().setColorFilter(getResources().getColor(R.color.yellow), PorterDuff.Mode.SRC_IN);
         txtpassword.getBackground().setColorFilter(getResources().getColor(R.color.yellow), PorterDuff.Mode.SRC_IN);
 
-        txtpassword.setText("");
-        txtusername.setText("");
+        txtpassword.setText("10");
+        txtusername.setText("jhonar10");
     }
 
     private void toggle_showpassword() {

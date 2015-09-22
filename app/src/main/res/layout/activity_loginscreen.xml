@@ -72,6 +72,16 @@
                                   android:gravity="center"
                                   android:background="#039be5">
 
+                        <TextView android:layout_width="fill_parent"
+                                  android:layout_height="wrap_content"
+                                  android:textColor="#f0efe2"
+                                  android:textSize="13sp"
+                                  android:paddingLeft="5dp"
+                                  android:id="@+id/lbl_login_username"
+                                  android:visibility="gone"
+                                  android:text="Username:"
+                                    />
+
                         <EditText android:layout_width="fill_parent"
                                   android:layout_height="wrap_content"
                                   android:textCursorDrawable="@null"
@@ -79,9 +89,20 @@
                                   android:textColorHint="#d2e6e0"
                                   android:inputType="textVisiblePassword"
                                   android:id="@+id/txt_loginscreen_username"
-                                  android:text="jhonar10"
+                                  android:text=""
                                   android:textColor="#fff187"
                                   android:hint="Username..."/>
+
+                        <TextView android:layout_width="fill_parent"
+                                  android:visibility="gone"
+                                  android:layout_height="wrap_content"
+                                  android:textColor="#f0efe2"
+                                  android:paddingTop="10dp"
+                                  android:textSize="13sp"
+                                  android:paddingLeft="5dp"
+                                  android:id="@+id/lbl_login_password"
+                                  android:text="Password:"
+                            />
 
                         <EditText android:layout_width="fill_parent"
                                   android:layout_height="wrap_content"
@@ -90,7 +111,7 @@
                                   android:textColorHint="#d2e6e0"
                                   android:inputType="textPassword"
                                   android:id="@+id/txt_loginscreen_password"
-                                  android:text="10"
+                                  android:text=""
                                   android:textColor="#fff187"
                                   android:hint="Password..."/>
 

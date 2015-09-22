@@ -13,11 +13,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,8 +31,11 @@ import com.santeh.rjhonsl.samplemap.Parsers.UserActivityParser;
 import com.santeh.rjhonsl.samplemap.R;
 import com.santeh.rjhonsl.samplemap.Utils.FusedLocation;
 import com.santeh.rjhonsl.samplemap.Utils.Helper;
+import com.sleepbot.datetimepicker.time.RadialPickerLayout;
+import com.sleepbot.datetimepicker.time.TimePickerDialog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +43,7 @@ import java.util.Map;
 /**
  * Created by rjhonsl on 9/11/2015.
  */
-public class MapsActivity_UserMonitoring extends AppCompatActivity implements OnMapReadyCallback {
+public class MapsActivity_UserMonitoring extends AppCompatActivity implements OnMapReadyCallback, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     Activity activity;
     Context context;
@@ -49,12 +54,25 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
     ProgressDialog PD;
 
     GoogleMap gmap;
+    int yyyy= 1970;
+    int mm = 1;
+    int dd = 1;
 
-    ImageButton btnChangeMaptype;
+    String firstname, lastname;
+
+    ImageButton btnChangeMaptype, btnFilterByCalendars;
+    TextView txtdate;
 
     int passedUserid;
 
+    public static final String DATEPICKER_TAG = "datepicker";
+
     List <CustInfoObject> useractivityList;
+
+    DatePickerDialog datePickerDialog;
+    TimePickerDialog timePickerDialog;
+
+    String givendate;
 
 
     @Override
@@ -73,6 +91,13 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
         PD = new ProgressDialog(this);
         PD.setCancelable(false);
 
+        final Calendar calendar = Calendar.getInstance();
+
+        datePickerDialog = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        timePickerDialog = TimePickerDialog.newInstance(MapsActivity_UserMonitoring.this, calendar.get(Calendar.HOUR_OF_DAY) ,calendar.get(Calendar.MINUTE), false, false);
+
+        txtdate = (TextView) findViewById(R.id.date_usermonitoring);
+        txtdate.setText(Helper.convertLongtoDate_Gregorian(System.currentTimeMillis()));
 
 
         extras = getIntent();
@@ -81,12 +106,17 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
             if (extras.hasExtra("userid")){
                 passedUserid= extras.getIntExtra("userid",0);
             }
-        }
 
+            if (extras.hasExtra("firstname") && extras.hasExtra("lastname")){
+                firstname= extras.getStringExtra("firstname");
+                lastname= extras.getStringExtra("lastname");
+                setTitle(firstname + " " + lastname);
+            }
+        }
+        givendate = Helper.convertLongtoDateTime_DB_Format(System.currentTimeMillis());
 
         btnChangeMaptype = (ImageButton) findViewById(R.id.btn_changeMaptype);
-
-
+        btnFilterByCalendars = (ImageButton) findViewById(R.id.btn_viewCalendar);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -118,6 +148,18 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
                 }
             }
         }, 200);
+
+
+        btnFilterByCalendars.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                datePickerDialog.setVibrate(isVibrate());
+                datePickerDialog.setYearRange(1985, 2028);
+//                datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
+                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+
+            }
+        });
 
         btnChangeMaptype.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,12 +193,12 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
             }
         });
 
-        getAllUsers();
+        getActivityInfoByUserIDandDate(givendate);
 
     }
 
 
-    public void getAllUsers() {
+    public void getActivityInfoByUserIDandDate(final String setDate) {
         PD.setMessage("Please wait...");
         PD.show();
 
@@ -191,7 +233,7 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
                                                     new LatLng(Double.parseDouble(useractivityList.get(i).getLatitude()), Double.parseDouble(useractivityList.get(i).getLongtitude())),//gets latlong
                                                     Helper.iconGeneratorSample(context, (i + 1) + "", activity), //creates an icon with a number
                                                     useractivityList.get(i).getActionDone(), //action done by the user in the latlong
-                                                    Helper.convertLongtoDateTimeString(Helper.convertDateTimeStringToMilis(useractivityList.get(i).getDateTime()))//date when action was done
+                                                    Helper.convertLongtoDateTimeString(Helper.convertDateTimeStringToMilis_DB_Format(useractivityList.get(i).getDateTime()))//date when action was done
                                             );
                                         }
                                     }
@@ -217,7 +259,7 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
                     params.put("deviceid", Helper.getMacAddress(context));
                     params.put("userid", Helper.variables.getGlobalVar_currentUserID(activity)+"");
                     params.put("idofuser", passedUserid+"");
-
+                    params.put("date", setDate);
                     return params;
                 }
             };
@@ -231,4 +273,41 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
     }
 
 
+    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+        setYyyy(year);
+        setDd(day);
+        setMm(month + 1);
+        txtdate.setText(Helper.convertDatetoGregorain(year, month + 1, day) + " - " + year + "-" + (month + 1) + "-" + day);
+        getActivityInfoByUserIDandDate(year + "-" + (month + 1) + "-" + day);
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+
+    }
+
+    public int getDd() {
+        return dd;
+    }
+
+    public void setDd(int dd) {
+        this.dd = dd;
+    }
+
+    public int getMm() {
+        return mm;
+    }
+
+    public void setMm(int mm) {
+        this.mm = mm;
+    }
+
+    public int getYyyy() {
+        return yyyy;
+    }
+
+    public void setYyyy(int yyyy) {
+        this.yyyy = yyyy;
+    }
 }//end of class
