@@ -91,7 +91,8 @@ public class Helper {
         public static String URL_SELECT_ALL_PONDINFO_GROUPBY_CUSTINFO = "http://mysanteh.site50.net/santehweb/selectAllPondGroupBy.php";
         public static String URL_SELECT_ALL_PONDINFO = "http://mysanteh.site50.net/santehweb/selectAllPond.php";
         public static String URL_SELECT_ALL_USERS  = "http://mysanteh.site50.net/santehweb/selectAllUsers.php";
-        public static String URL_SELECT_ALL_USERS_ACTIVITY  = "http://mysanteh.site50.net/santehweb/selectUserActivityByID.php";
+        public static String URL_SELECT_USERS_ACTIVITY_BY_DATE_AND_ID  = "http://mysanteh.site50.net/santehweb/selectUserActivityByID.php";
+        public static String URL_SELECT_ALL_USERS_ACTIVITY_BY_ID  = "http://mysanteh.site50.net/santehweb/selectAllUserActivityByID.php";
         public static String URL_SELECT_ALL_PONDINFO_BETWEEN_DATES = "http://mysanteh.site50.net/santehweb/selectAllPondBetweenDate.php";
         public static String URL_SELECT_ALL_PONDINFO_LEFTJOIN_CUSTINFO = "http://mysanteh.site50.net/santehweb/selectAllPondInfoLeftJoinCustInfo.php";
 
@@ -318,6 +319,16 @@ public class Helper {
     public static String computeWeeklyFeedConsumption(double ABW, double NumberofStock, double feedingrate, double survivalrate) {
         DecimalFormat df = new DecimalFormat("#.##");
         return df.format (ABW*NumberofStock*feedingrate*survivalrate*7);
+    }
+
+    public static String deciformat(double num, int numberOfDecimalPlace) {
+        String str = "";
+
+        for (int i = 0; i < numberOfDecimalPlace; i++) {
+                str = str +"#";
+        }
+        DecimalFormat df = new DecimalFormat("#."+str);
+        return df.format(num);
     }
 
 
@@ -606,7 +617,6 @@ public class Helper {
 
     public static String convertLongtoDateString(long dateInMillis){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(dateInMillis);
         return formatter.format(calendar.getTime());
@@ -615,7 +625,13 @@ public class Helper {
 
     public static String convertLongtoDate_Gregorian(long dateInMillis){
         SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy");
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
+        return formatter.format(calendar.getTime());
+    }
+
+    public static String convertLongtoDate_GregorianWithTime(long dateInMillis){
+        SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd, yyyy hh:mm aa");
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(dateInMillis);
         return formatter.format(calendar.getTime());
@@ -624,15 +640,13 @@ public class Helper {
 
     public static String convertLongtoDateTimeString(long dateInMillis){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm aa");
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(dateInMillis);
         return formatter.format(calendar.getTime());
     }
 
     public static String convertLongtoDateTime_DB_Format(long dateInMillis){
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd hh:mm aa");
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(dateInMillis);
         return formatter.format(calendar.getTime());

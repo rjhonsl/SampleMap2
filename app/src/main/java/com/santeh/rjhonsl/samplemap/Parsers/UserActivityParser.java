@@ -62,7 +62,7 @@ public class UserActivityParser {
                     custInfoObject.setActionType(obj.getString("user_act_actiontype"));
                 }
 
-
+                custInfoObject.setPondIndex(i+1);
 
 
                 Log.d("JSON PARSE", "ID: " + custInfoObject.getId() + " " + custInfoObject.getLatitude() + " " + custInfoObject.getLongtitude());
