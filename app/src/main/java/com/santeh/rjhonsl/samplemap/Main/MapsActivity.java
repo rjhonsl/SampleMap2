@@ -315,7 +315,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         nav_usermonitoring.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(MapsActivity.this, Activity_UserMonitoringOptions.class);
+                final Intent intent = new Intent(MapsActivity.this, Activity_UserMonitoring_ViewByUser.class);
                 closeDrawer();
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {

@@ -71,7 +71,7 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
 
     String firstname, lastname;
 
-    ImageButton btnChangeMaptype, btnFilterByCalendars;
+    ImageButton btnChangeMaptype, btnFilterByCalendars, btnviewDrawer;
     TextView txtdate, txtfiller, txtViewAllActivity;
 
     int passedUserid;
@@ -149,6 +149,7 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
 
         btnChangeMaptype = (ImageButton) findViewById(R.id.btn_changeMaptype);
         btnFilterByCalendars = (ImageButton) findViewById(R.id.btn_viewCalendar);
+        btnviewDrawer = (ImageButton) findViewById(R.id.btn_viewDrawer);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -180,6 +181,15 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
                 }
             }
         }, 200);
+
+        btnviewDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (drawerLayout.isDrawerOpen(drawerLayout)){
+                    openDrawer();
+//                }
+            }
+        });
 
         lvUserActivity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -377,7 +387,7 @@ public class MapsActivity_UserMonitoring extends AppCompatActivity implements On
     }
 
     private void openDrawer() {
-        drawerLayout.closeDrawer(Gravity.RIGHT);
+        drawerLayout.openDrawer(Gravity.LEFT);
     }
 
     public int getDd() {

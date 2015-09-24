@@ -549,6 +549,12 @@ public class Helper {
         TextView txttitle = (TextView) d.findViewById(R.id.dialog_okonly_title);
         TextView txtprompt = (TextView) d.findViewById(R.id.dialog_okonly_prompt);
         Button txtok = (Button) d.findViewById(R.id.btn_dialog_okonly_OK);
+        txtok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                d.hide();
+            }
+        });
         txtprompt.setText(prompt);
         txttitle.setText(title);
         txtok.setText(button);

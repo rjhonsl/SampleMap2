@@ -32,19 +32,38 @@
         </LinearLayout>
 
         <LinearLayout
-            android:padding="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="0dp"
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-            <EditText
-                android:drawableRight="@drawable/ic_search_darkteal_24dp"
-                android:inputType="textCapWords"
-                android:id="@+id/txt_viewcustomerInfo_search"
-                android:padding="10dp"
-                android:background="#00000000"
-                android:hint="Enter a keyword"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"/>
+
+            <LinearLayout android:layout_width="fill_parent"
+                          android:layout_height="wrap_content"
+                          android:gravity="center_horizontal|center_vertical"
+                android:orientation="horizontal">
+                <EditText
+                    android:layout_weight="1"
+                    android:inputType="textCapWords"
+                    android:id="@+id/edt_viewUserActivity_search"
+                    android:padding="10dp"
+                    android:background="#00000000"
+                    android:hint="Enter a name..."
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"/>
+
+                <ImageButton android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:padding="5dp"
+                             android:id="@+id/btn_viewUserActivity_search"
+                             android:background="@drawable/bg_material_transparent"
+                             android:src="@drawable/ic_search_darkteal_24dp"/>
+
+                <!--android:drawableRight="@drawable/ic_search_darkteal_24dp"-->
+            </LinearLayout>
+
 
             <View
                 android:layout_width="wrap_content"
